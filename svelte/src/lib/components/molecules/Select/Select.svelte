@@ -265,7 +265,7 @@
 	}
 
 	.option-item {
-		padding: 0.5rem 0.75rem;
+		padding: var(--space-2) var(--space-3);
 		cursor: pointer;
 		font-size: var(--text-sm);
 		display: flex;

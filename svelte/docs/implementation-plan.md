@@ -55,10 +55,10 @@ Build a flexible, high-density capable design system in Svelte 5 for the Vyasa U
 - Check accessibility (a11y) compliance.
 
 ### Manual Verification
-- Create a `KitchenSink` page in the `routes/` (if using SvelteKit) or a Storybook-like preview environment to visually verify:
+- [COMPLETED] Create a `KitchenSink` page in the `routes/` (if using SvelteKit) or a Storybook-like preview environment to visually verify:
     - Theme switching (Light/Dark) - **Verify via Keyboard Shortcuts**.
     - Density switching (Low/Base/High).
     - Interaction states (Hover, Active, Disabled).
-- **IDE Demo Page**: Recreate a VSCode-like layout with `AppShell`, `Tree`, `Tabs`, and `Panel`.
+- [COMPLETED] **IDE Demo Page**: Recreate a VSCode-like layout with `AppShell`, `Tree`, `Tabs`, and `Panel`.
     - Test showing/hiding sidebars.
     - Test resizing panels.

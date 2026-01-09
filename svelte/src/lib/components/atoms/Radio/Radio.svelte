@@ -97,5 +97,6 @@
 	.label-text {
 		font-size: var(--text-sm);
 		color: var(--text-primary);
+		font-weight: 500;
 	}
 </style>
