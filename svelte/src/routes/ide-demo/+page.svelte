@@ -1,10 +1,12 @@
 <script lang="ts">
+	import { getContext } from 'svelte';
 	import AppShell from '$lib/components/organisms/AppShell/AppShell.svelte';
 	import Tree, { type TreeNode } from '$lib/components/organisms/Tree/Tree.svelte';
 	import Tabs, { type TabItem } from '$lib/components/organisms/Tabs/Tabs.svelte';
 	import Panel from '$lib/components/organisms/Panel/Panel.svelte';
 	import Button from '$lib/components/atoms/Button/Button.svelte';
 	import Icon from '$lib/components/atoms/Icon/Icon.svelte';
+	import CodeEditor from '$lib/components/molecules/CodeEditor/CodeEditor.svelte';
 
 	// --- State ---
 	// --- State ---
@@ -14,7 +16,72 @@
 	let topVisible = $state(false);
 	let maximizedZone = $state<'none' | 'bottom' | 'content'>('none'); // [REFACTOR]
 
+	// --- Context ---
+	const themeContext = getContext<{ current: 'light' | 'dark' }>('theme');
+
 	let activeActivityId = $state('files');
+
+	// --- File Content Data ---
+	let fileContentMap = $state<Record<string, string>>({
+		'app.html': `<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8" />
+		<link rel="icon" href="%sveltekit.assets%/favicon.png" />
+		<meta name="viewport" content="width=device-width" />
+		%sveltekit.head%
+	</head>
+	<body data-sveltekit-preload-data="hover">
+		<div style="display: contents">%sveltekit.body%</div>
+	</body>
+</html>`,
+		'page.svelte': `<script>
+	let count = 0;
+<\/script>
+
+<h1>Welcome to Vyasa</h1>
+<button on:click={() => count++}>
+	Clicks: {count}
+</button>`,
+		'layout.svelte': `<slot />`,
+		'package.json': `{
+	"name": "project-vyasa",
+	"version": "0.0.1",
+	"scripts": {
+		"dev": "vite dev",
+		"build": "vite build",
+		"preview": "vite preview"
+	}
+}`,
+		'readme.md': `# Project Vyasa
+
+A modern IDE built with Svelte.
+
+## Features
+- Fast
+- Accessible
+- Beautiful`,
+		'tsconfig.json': `{
+	"extends": "./.svelte-kit/tsconfig.json",
+	"compilerOptions": {
+		"allowJs": true,
+		"checkJs": true,
+		"esModuleInterop": true,
+		"forceConsistentCasingInFileNames": true,
+		"resolveJsonModule": true,
+		"skipLibCheck": true,
+		"sourceMap": true,
+		"strict": true
+	}
+}`
+	});
+
+	function getLanguageFromFilename(filename: string) {
+		if (filename.endsWith('.md')) return 'markdown';
+		if (filename.endsWith('.html')) return 'html';
+		if (filename.endsWith('.ts') || filename.endsWith('.json')) return 'typescript'; // JSON as TS for now or add json lang
+		return 'html'; // Default to HTML/Svelte-like
+	}
 
 	// Maximized state helpers
 	function toggleMaximizeBottom() {
@@ -119,7 +186,7 @@
 
 {#snippet codeEditorSnippet(filename: string)}
 	<div class="code-editor relative h-full">
-		<div class="absolute top-2 right-2 flex gap-2">
+		<div class="absolute top-2 right-2 z-10 flex gap-2">
 			<Button
 				variant="ghost"
 				size="icon"
@@ -128,14 +195,12 @@
 				title={maximizedZone === 'content' ? 'Restore View' : 'Maximize Editor'}
 			/>
 		</div>
-		<div class="comment">// This is a demo editor content for {filename}</div>
-		<div class="line">
-			<span class="keyword">import</span> <span class="component">Component</span>
-			<span class="keyword">from</span> <span class="string">'./Component.svelte'</span>;
-		</div>
-		<div class="line indent">
-			<span class="keyword">let</span> count = <span class="number">0</span>;
-		</div>
+		<CodeEditor
+			bind:value={fileContentMap[filename]}
+			language={getLanguageFromFilename(filename)}
+			theme={themeContext.current}
+			class="h-full border-0"
+		/>
 	</div>
 {/snippet}
 
@@ -386,27 +451,6 @@
 		font-family: var(--font-mono);
 		font-size: var(--text-sm);
 		line-height: 1.5;
-	}
-	.comment {
-		color: var(--text-tertiary);
-	}
-	.keyword {
-		color: var(--action-primary);
-	}
-	.component {
-		color: var(--text-primary);
-	}
-	.string {
-		color: var(--status-success);
-	}
-	.number {
-		color: var(--status-warning);
-	}
-	.line {
-		margin-top: 0.25rem;
-	}
-	.indent {
-		padding-left: 1rem;
 	}
 
 	/* Header */

@@ -1,72 +1,86 @@
 <script lang="ts">
-  import { onMount, setContext } from 'svelte';
-  
-  type Theme = 'light' | 'dark' | 'system';
-  type Density = 'compact' | 'standard' | 'comfortable';
+	import { onMount, setContext } from 'svelte';
 
-  interface Props {
-    children?: import('svelte').Snippet;
-  }
+	type Theme = 'light' | 'dark' | 'system';
+	type Density = 'compact' | 'standard' | 'comfortable';
 
-  let { children }: Props = $props();
+	interface Props {
+		children?: import('svelte').Snippet;
+	}
 
-  // State
-  let theme = $state<Theme>('system');
-  let density = $state<Density>('standard');
+	let { children }: Props = $props();
 
-  // Derived
-  let effectiveTheme = $derived.by(() => {
-    if (theme === 'system') {
-      if (typeof window !== 'undefined' && window.matchMedia('(prefers-color-scheme: dark)').matches) {
-        return 'dark';
-      }
-      return 'light';
-    }
-    return theme;
-  });
+	// State
+	let theme = $state<Theme>('system');
+	let density = $state<Density>('standard');
 
-  // Effect to apply to document
-  $effect(() => {
-    if (typeof document !== 'undefined') {
-      document.documentElement.setAttribute('data-theme', effectiveTheme);
-      document.documentElement.setAttribute('data-density', density);
-    }
-  });
+	// Derived
+	let effectiveTheme = $derived.by(() => {
+		if (theme === 'system') {
+			if (
+				typeof window !== 'undefined' &&
+				window.matchMedia('(prefers-color-scheme: dark)').matches
+			) {
+				return 'dark';
+			}
+			return 'light';
+		}
+		return theme;
+	});
 
-  // Context API
-  const context = {
-    get theme() { return theme },
-    set theme(v: Theme) { theme = v },
-    get density() { return density },
-    set density(v: Density) { density = v },
-    toggleTheme: () => {
-      theme = theme === 'light' ? 'dark' : 'light';
-    },
-    cycleDensity: () => {
-      const map: Record<Density, Density> = {
-        'compact': 'standard',
-        'standard': 'comfortable',
-        'comfortable': 'compact'
-      };
-      density = map[density];
-    }
-  };
+	// Effect to apply to document
+	$effect(() => {
+		if (typeof document !== 'undefined') {
+			document.documentElement.setAttribute('data-theme', effectiveTheme);
+			document.documentElement.setAttribute('data-density', density);
+		}
+	});
 
-  setContext('theme', context);
+	// Context API
+	const context = {
+		get theme() {
+			return theme;
+		},
+		set theme(v: Theme) {
+			theme = v;
+		},
+		get current() {
+			return effectiveTheme;
+		}, // Expose resolved theme
+		get density() {
+			return density;
+		},
+		set density(v: Density) {
+			density = v;
+		},
+		toggleTheme: () => {
+			theme = theme === 'light' ? 'dark' : 'light';
+		},
+		cycleDensity: () => {
+			const map: Record<Density, Density> = {
+				compact: 'standard',
+				standard: 'comfortable',
+				comfortable: 'compact'
+			};
+			density = map[density];
+		}
+	};
 
-  // Keyboard shortcuts for testing
-  function handleKeydown(e: KeyboardEvent) {
-    // Ctrl + T = Toggle Theme
-    if (e.ctrlKey && e.key === 't') {
-      e.preventDefault();
-      context.toggleTheme();
-    }
-    // Ctrl + D = Cycle Density
-    if (e.ctrlKey && e.key === 'd') {
-      e.preventDefault();
-      context.cycleDensity();
-    }
-  }
+	setContext('theme', context);
+
+	// Keyboard shortcuts for testing
+	function handleKeydown(e: KeyboardEvent) {
+		// Ctrl + T = Toggle Theme
+		if (e.ctrlKey && e.key === 't') {
+			e.preventDefault();
+			context.toggleTheme();
+		}
+		// Ctrl + D = Cycle Density
+		if (e.ctrlKey && e.key === 'd') {
+			e.preventDefault();
+			context.cycleDensity();
+		}
+	}
 </script>
 
 <svelte:window onkeydown={handleKeydown} />
