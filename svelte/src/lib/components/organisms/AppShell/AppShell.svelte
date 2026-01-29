@@ -17,6 +17,12 @@
 		bottomVisible?: boolean;
 		topVisible?: boolean;
 		maximizedZone?: 'none' | 'bottom' | 'content'; // [REFACTOR]
+
+		// Dimensions
+		leftWidth?: number;
+		rightWidth?: number;
+		bottomHeight?: number;
+		topHeight?: number;
 	}
 
 	let {
@@ -32,14 +38,12 @@
 		rightVisible = true,
 		bottomVisible = true,
 		topVisible = true,
-		maximizedZone = 'none'
+		maximizedZone = 'none',
+		leftWidth = $bindable(320),
+		rightWidth = $bindable(320),
+		bottomHeight = $bindable(192),
+		topHeight = $bindable(200)
 	}: Props = $props();
-
-	// --- Resizable State ---
-	let leftWidth = $state(320); // 20rem = 320px
-	let rightWidth = $state(320);
-	let bottomHeight = $state(192); // 12rem = 192px
-	let topHeight = $state(200);
 
 	// --- Grid Template ---
 	const gridTemplate = $derived(`

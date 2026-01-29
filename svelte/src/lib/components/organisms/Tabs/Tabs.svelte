@@ -1,11 +1,13 @@
 <script lang="ts">
-	import Icon, { type IconName } from '../../atoms/Icon/Icon.svelte';
+	import Icon from '../../atoms/Icon/Icon.svelte';
 	import Button from '../../atoms/Button/Button.svelte';
+	import { X } from 'lucide-svelte';
+	import type { ComponentType } from 'svelte';
 
 	export interface TabItem {
 		id: string;
 		label: string;
-		icon?: IconName;
+		icon?: ComponentType;
 		content?: import('svelte').Snippet;
 		closeable?: boolean;
 	}
@@ -35,7 +37,7 @@
 				onkeydown={(e) => e.key === 'Enter' && onSelect(tab.id)}
 			>
 				{#if tab.icon}
-					<Icon name={tab.icon} size={14} class="tab-icon" />
+					<Icon icon={tab.icon} size={14} class="tab-icon" />
 				{/if}
 				<span class="tab-label">{tab.label}</span>
 
@@ -50,7 +52,7 @@
 						tabindex="0"
 						onkeydown={(e) => e.key === 'Enter' && (e.stopPropagation(), onClose(tab.id))}
 					>
-						<Icon name="X" size={12} />
+						<Icon icon={X} size={12} />
 					</span>
 				{/if}
 			</div>

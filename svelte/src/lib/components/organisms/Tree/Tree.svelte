@@ -1,10 +1,10 @@
 <script module lang="ts">
-	import type { IconName } from '../../atoms/Icon/Icon.svelte';
+	import type { ComponentType } from 'svelte';
 
 	export interface TreeNode {
 		id: string;
 		label: string;
-		icon?: IconName;
+		icon?: ComponentType;
 		children?: TreeNode[];
 		[key: string]: any;
 	}
@@ -12,6 +12,7 @@
 
 <script lang="ts">
 	import Icon from '../../atoms/Icon/Icon.svelte';
+	import { ChevronDown, ChevronRight } from 'lucide-svelte';
 
 	interface Props {
 		data: TreeNode[];
@@ -76,7 +77,7 @@
 					e.key === 'Enter' && hasChildren && handleToggle(node, e as unknown as MouseEvent)}
 			>
 				<Icon
-					name={isExpanded ? 'ChevronDown' : 'ChevronRight'}
+					icon={isExpanded ? ChevronDown : ChevronRight}
 					size={16}
 					class={isSelected ? 'icon-selected' : 'icon-default'}
 				/>
@@ -84,7 +85,7 @@
 
 			<!-- Node Icon -->
 			{#if node.icon}
-				<Icon name={node.icon} size={16} class="node-icon" />
+				<Icon icon={node.icon} size={16} class="node-icon" />
 			{/if}
 
 			<!-- Label -->

@@ -1,5 +1,6 @@
 <script lang="ts">
 	import Icon from '../../atoms/Icon/Icon.svelte';
+	import { Info, CheckCircle, AlertTriangle, AlertOctagon, X } from 'lucide-svelte';
 
 	interface Props {
 		variant?: 'info' | 'success' | 'warning' | 'danger';
@@ -19,19 +20,19 @@
 	}
 
 	const icons = {
-		info: 'Info',
-		success: 'CheckCircle',
-		warning: 'AlertTriangle',
-		danger: 'AlertOctagon'
+		info: Info,
+		success: CheckCircle,
+		warning: AlertTriangle,
+		danger: AlertOctagon
 	};
 
-	let iconName = $derived(icons[variant] || 'Info');
+	let iconComponent = $derived(icons[variant] || Info);
 </script>
 
 {#if visible}
 	<div class="alert {variant}" role="alert">
 		<div class="alert-icon">
-			<Icon name={iconName} size={24} />
+			<Icon icon={iconComponent} size={24} />
 		</div>
 		<div class="alert-content">
 			{#if title}
@@ -43,7 +44,7 @@
 		</div>
 		{#if closable}
 			<button class="close-btn" onclick={close} aria-label="Close alert">
-				<Icon name="X" size={16} />
+				<Icon icon={X} size={16} />
 			</button>
 		{/if}
 	</div>

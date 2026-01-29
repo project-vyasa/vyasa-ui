@@ -1,5 +1,6 @@
 <script lang="ts">
 	import Icon from '../../atoms/Icon/Icon.svelte';
+	import { ChevronRight } from 'lucide-svelte';
 
 	interface BreadcrumbItem {
 		label: string;
@@ -37,7 +38,7 @@
 						{#if separator}
 							{@render separator()}
 						{:else}
-							<Icon name="ChevronRight" size={14} />
+							<Icon icon={ChevronRight} size={14} />
 						{/if}
 					</span>
 				{/if}

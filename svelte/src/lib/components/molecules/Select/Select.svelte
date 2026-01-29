@@ -1,5 +1,6 @@
 <script lang="ts">
 	import Icon from '../../atoms/Icon/Icon.svelte';
+	import { ChevronDown, Check } from 'lucide-svelte';
 	import { onDestroy } from 'svelte';
 
 	interface Option {
@@ -133,7 +134,7 @@
 		<span class="select-value" class:placeholder={displayValue === placeholder}>
 			{displayValue}
 		</span>
-		<Icon name="ChevronDown" size={16} class="select-icon" />
+		<Icon icon={ChevronDown} size={16} class="select-icon" />
 	</div>
 
 	<input type="hidden" {name} value={JSON.stringify(value)} {id} />
@@ -165,7 +166,7 @@
 					>
 						<span>{option.label}</span>
 						{#if isSelected(option.value)}
-							<Icon name="Check" size={14} class="check-icon" />
+							<Icon icon={Check} size={14} class="check-icon" />
 						{/if}
 					</div>
 				{:else}

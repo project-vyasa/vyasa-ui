@@ -1,6 +1,7 @@
 <script lang="ts" generics="T">
 	import { type Snippet } from 'svelte';
 	import Icon from '$lib/components/atoms/Icon/Icon.svelte';
+	import { ChevronUp, ChevronDown } from 'lucide-svelte';
 
 	export interface Column<T> {
 		key: keyof T;
@@ -98,7 +99,7 @@
 						<div class="th-content">
 							<span>{col.label}</span>
 							<span class="sort-icon-wrapper" class:visible={sortKey === col.key}>
-								<Icon name={sortDirection === 'asc' ? 'ChevronUp' : 'ChevronDown'} size={14} />
+								<Icon icon={sortDirection === 'asc' ? ChevronUp : ChevronDown} size={14} />
 							</span>
 						</div>
 					</th>

@@ -1,13 +1,14 @@
 <script lang="ts">
 	import type { HTMLButtonAttributes } from 'svelte/elements';
+	import type { ComponentType } from 'svelte';
 	import Icon from '../Icon/Icon.svelte';
-	import type { IconName } from '../Icon/Icon.svelte';
+	import { Loader2 } from 'lucide-svelte';
 
 	interface Props extends HTMLButtonAttributes {
 		variant?: 'primary' | 'secondary' | 'outline' | 'ghost' | 'danger' | 'success' | 'warning';
 		size?: 'sm' | 'md' | 'lg' | 'icon';
 		loading?: boolean;
-		icon?: IconName;
+		icon?: ComponentType;
 		children?: import('svelte').Snippet;
 	}
 
@@ -33,11 +34,11 @@
 	{...rest}
 >
 	{#if loading}
-		<Icon name="Loader2" class="spinner" size={16} />
+		<Icon icon={Loader2} class="spinner" size={16} />
 	{/if}
 
 	{#if icon && !loading}
-		<Icon name={icon} class="icon-left" size={16} />
+		<Icon {icon} class="icon-left" size={16} />
 	{/if}
 
 	{#if children}

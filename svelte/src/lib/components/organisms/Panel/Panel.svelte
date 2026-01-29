@@ -1,10 +1,10 @@
 <script lang="ts">
-	import type { Snippet } from 'svelte';
-	import Icon, { type IconName } from '../../atoms/Icon/Icon.svelte';
+	import type { Snippet, ComponentType } from 'svelte';
+	import Icon from '../../atoms/Icon/Icon.svelte';
 
 	interface Props {
 		title: string;
-		icon?: IconName;
+		icon?: ComponentType;
 		actions?: Snippet;
 		children: Snippet;
 		class?: string;
@@ -17,7 +17,7 @@
 	<header class="panel-header">
 		<div class="panel-title">
 			{#if icon}
-				<Icon name={icon} size={14} />
+				<Icon {icon} size={14} />
 			{/if}
 			<span>{title}</span>
 		</div>

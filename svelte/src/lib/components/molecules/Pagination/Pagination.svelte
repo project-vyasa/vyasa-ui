@@ -1,6 +1,7 @@
 <script lang="ts">
 	import Button from '../../atoms/Button/Button.svelte';
 	import Icon from '../../atoms/Icon/Icon.svelte';
+	import { ChevronLeft, ChevronRight } from 'lucide-svelte';
 
 	interface Props {
 		page?: number;
@@ -44,7 +45,7 @@
 
 <nav class="pagination" aria-label="Pagination">
 	<Button variant="outline" size="sm" disabled={page === 1} onclick={() => goTo(page - 1)}>
-		<Icon name="ChevronLeft" size={16} />
+		<Icon icon={ChevronLeft} size={16} />
 		<span class="sr-only">Previous</span>
 	</Button>
 
@@ -76,7 +77,7 @@
 	</div>
 
 	<Button variant="outline" size="sm" disabled={page === totalPages} onclick={() => goTo(page + 1)}>
-		<Icon name="ChevronRight" size={16} />
+		<Icon icon={ChevronRight} size={16} />
 		<span class="sr-only">Next</span>
 	</Button>
 </nav>

@@ -2,6 +2,7 @@
 	import Icon from '$lib/components/atoms/Icon/Icon.svelte';
 	import { toast, type Toast } from '$lib/stores/toast.svelte.js';
 	import { fly } from 'svelte/transition';
+	import { Info, CheckCircle, AlertTriangle, AlertOctagon, X } from 'lucide-svelte';
 
 	interface Props {
 		item: Toast;
@@ -10,23 +11,23 @@
 	let { item }: Props = $props();
 
 	const icons = {
-		info: 'Info',
-		success: 'CheckCircle',
-		warning: 'AlertTriangle',
-		danger: 'AlertOctagon'
+		info: Info,
+		success: CheckCircle,
+		warning: AlertTriangle,
+		danger: AlertOctagon
 	};
 
-	let iconName = $derived(icons[item.variant || 'info'] || 'Info');
+	let iconComponent = $derived(icons[item.variant || 'info'] || Info);
 </script>
 
 <div class="toast {item.variant || 'info'}" role="alert" transition:fly={{ y: 20, duration: 300 }}>
 	<div class="toast-icon">
-		<Icon name={iconName} size={20} />
+		<Icon icon={iconComponent} size={20} />
 	</div>
 	<div class="toast-message">{item.message}</div>
 	{#if item.dismissible}
 		<button class="close-btn" onclick={() => toast.dismiss(item.id)} aria-label="Dismiss">
-			<Icon name="X" size={16} />
+			<Icon icon={X} size={16} />
 		</button>
 	{/if}
 </div>

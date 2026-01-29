@@ -23,6 +23,39 @@
 	import Breadcrumbs from '$lib/components/molecules/Breadcrumbs/Breadcrumbs.svelte';
 	import Pagination from '$lib/components/molecules/Pagination/Pagination.svelte';
 
+	import {
+		User,
+		Settings,
+		Bell,
+		FolderOpen,
+		Folder,
+		FileCode,
+		Search,
+		Maximize2,
+		Sun,
+		Moon,
+		Edit,
+		Copy,
+		Trash,
+		MoreHorizontal,
+		ArrowUp,
+		ArrowRight,
+		ArrowDown,
+		ArrowLeft,
+		Bold,
+		Italic,
+		Underline,
+		AlignLeft,
+		AlignCenter,
+		AlignRight,
+		Activity,
+		Airplay,
+		AlertCircle,
+		CheckCircle,
+		Github,
+		Files,
+		Plus
+	} from 'lucide-svelte';
 	import { getContext } from 'svelte';
 
 	// Theme Context
@@ -34,9 +67,9 @@
 	// --- Tabs Data ---
 	let activeTabId = $state('tab1');
 	let tabs: TabItem[] = [
-		{ id: 'tab1', label: 'Account', icon: 'User' },
-		{ id: 'tab2', label: 'Preferences', icon: 'Settings' },
-		{ id: 'tab3', label: 'Notifications', icon: 'Bell' }
+		{ id: 'tab1', label: 'Account', icon: User },
+		{ id: 'tab2', label: 'Preferences', icon: Settings },
+		{ id: 'tab3', label: 'Notifications', icon: Bell }
 	];
 
 	// --- Tree Data ---
@@ -46,11 +79,11 @@
 		{
 			id: 'root',
 			label: 'Project Root',
-			icon: 'FolderOpen',
+			icon: FolderOpen,
 			children: [
-				{ id: 'src', label: 'src', icon: 'Folder' },
-				{ id: 'public', label: 'public', icon: 'Folder' },
-				{ id: 'package.json', label: 'package.json', icon: 'FileCode' }
+				{ id: 'src', label: 'src', icon: Folder },
+				{ id: 'public', label: 'public', icon: Folder },
+				{ id: 'package.json', label: 'package.json', icon: FileCode }
 			]
 		}
 	];
@@ -110,11 +143,11 @@
 				<Button
 					variant="outline"
 					onclick={() => themeCtx.toggleTheme()}
-					icon={themeCtx.theme === 'dark' ? 'Sun' : 'Moon'}
+					icon={themeCtx.theme === 'dark' ? Sun : Moon}
 				>
 					{themeCtx.theme === 'light' ? 'Dark Mode' : 'Light Mode'}
 				</Button>
-				<Button variant="outline" onclick={() => themeCtx.cycleDensity()} icon="Maximize2">
+				<Button variant="outline" onclick={() => themeCtx.cycleDensity()} icon={Maximize2}>
 					Density: {themeCtx.density}
 				</Button>
 			</div>
@@ -156,8 +189,8 @@
 			<Button variant="warning">Warning</Button>
 			<Button disabled>Disabled</Button>
 			<Button loading>Loading</Button>
-			<Button variant="primary" icon="Search">Icon Left</Button>
-			<Button variant="outline" size="icon" icon="Bell" />
+			<Button variant="primary" icon={Search}>Icon Left</Button>
+			<Button variant="outline" size="icon" icon={Bell} />
 		</div>
 	</section>
 
@@ -283,13 +316,13 @@
 		<h2 class="heading-2">Toolbar</h2>
 		<div class="toolbar-wrapper">
 			<Toolbar>
-				<Button variant="ghost" size="icon" icon="Bold" />
-				<Button variant="ghost" size="icon" icon="Italic" />
-				<Button variant="ghost" size="icon" icon="Underline" />
+				<Button variant="ghost" size="icon" icon={Bold} />
+				<Button variant="ghost" size="icon" icon={Italic} />
+				<Button variant="ghost" size="icon" icon={Underline} />
 				<div class="divider"></div>
-				<Button variant="ghost" size="icon" icon="AlignLeft" />
-				<Button variant="ghost" size="icon" icon="AlignCenter" />
-				<Button variant="ghost" size="icon" icon="AlignRight" />
+				<Button variant="ghost" size="icon" icon={AlignLeft} />
+				<Button variant="ghost" size="icon" icon={AlignCenter} />
+				<Button variant="ghost" size="icon" icon={AlignRight} />
 			</Toolbar>
 		</div>
 	</section>
@@ -297,13 +330,13 @@
 	<section class="section">
 		<h2 class="heading-2">Icons</h2>
 		<div class="row">
-			<Icon name="Activity" />
-			<Icon name="Airplay" />
-			<Icon name="AlertCircle" color="var(--status-error)" />
-			<Icon name="CheckCircle" color="var(--status-success)" />
-			<Icon name="Github" />
-			<Icon name="Sun" />
-			<Icon name="Moon" />
+			<Icon icon={Activity} />
+			<Icon icon={Airplay} />
+			<Icon icon={AlertCircle} color="var(--status-error)" />
+			<Icon icon={CheckCircle} color="var(--status-success)" />
+			<Icon icon={Github} />
+			<Icon icon={Sun} />
+			<Icon icon={Moon} />
 		</div>
 	</section>
 
@@ -312,9 +345,9 @@
 		<div class="grid-2-col">
 			<!-- Panel with Tree -->
 			<div class="demo-box h-80">
-				<Panel title="File Explorer" icon="Files">
+				<Panel title="File Explorer" icon={Files}>
 					{#snippet actions()}
-						<Button variant="ghost" size="icon" icon="Plus" class="h-4 w-4" />
+						<Button variant="ghost" size="icon" icon={Plus} class="h-4 w-4" />
 					{/snippet}
 					<Tree data={treeData} bind:expandedIds bind:selectedId />
 				</Panel>
@@ -360,19 +393,19 @@
 			<div class="demo-box p-4" style="height: 200px; display: flex; align-items: flex-start;">
 				<Dropdown bind:open={dropdownOpen}>
 					{#snippet trigger()}
-						<Button variant="outline" icon="MoreHorizontal">Options</Button>
+						<Button variant="outline" icon={MoreHorizontal}>Options</Button>
 					{/snippet}
 					{#snippet items()}
 						<div class="dropdown-content">
 							<button class="menu-item">
-								<Icon name="Edit" size={14} /> Edit
+								<Icon icon={Edit} size={14} /> Edit
 							</button>
 							<button class="menu-item">
-								<Icon name="Copy" size={14} /> Duplicate
+								<Icon icon={Copy} size={14} /> Duplicate
 							</button>
 							<div class="divider-h"></div>
 							<button class="menu-item text-danger">
-								<Icon name="Trash" size={14} /> Delete
+								<Icon icon={Trash} size={14} /> Delete
 							</button>
 						</div>
 					{/snippet}
@@ -387,16 +420,16 @@
 			<!-- Tooltips -->
 			<div class="demo-box p-4 flex items-center gap-4">
 				<Tooltip text="Top Tooltip">
-					<Button variant="ghost" size="icon" icon="ArrowUp" />
+					<Button variant="ghost" size="icon" icon={ArrowUp} />
 				</Tooltip>
 				<Tooltip text="Right Tooltip" position="right">
-					<Button variant="ghost" size="icon" icon="ArrowRight" />
+					<Button variant="ghost" size="icon" icon={ArrowRight} />
 				</Tooltip>
 				<Tooltip text="Bottom Tooltip" position="bottom">
-					<Button variant="ghost" size="icon" icon="ArrowDown" />
+					<Button variant="ghost" size="icon" icon={ArrowDown} />
 				</Tooltip>
 				<Tooltip text="Left Tooltip" position="left">
-					<Button variant="ghost" size="icon" icon="ArrowLeft" />
+					<Button variant="ghost" size="icon" icon={ArrowLeft} />
 				</Tooltip>
 			</div>
 		</div>

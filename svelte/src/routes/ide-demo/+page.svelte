@@ -7,6 +7,32 @@
 	import Button from '$lib/components/atoms/Button/Button.svelte';
 	import Icon from '$lib/components/atoms/Icon/Icon.svelte';
 	import CodeEditor from '$lib/components/molecules/CodeEditor/CodeEditor.svelte';
+	import {
+		FolderOpen,
+		Folder,
+		FileCode,
+		FileJson,
+		FileText,
+		Menu,
+		Search,
+		PanelLeft,
+		PanelBottom,
+		PanelRight,
+		PanelTop,
+		Files,
+		GitBranch,
+		MoreHorizontal,
+		RefreshCw,
+		ChevronRight,
+		List,
+		Terminal,
+		Minimize2,
+		Maximize2,
+		Layout,
+		X,
+		Plus,
+		Settings
+	} from 'lucide-svelte';
 
 	// --- State ---
 	// --- State ---
@@ -107,34 +133,34 @@ A modern IDE built with Svelte.
 		{
 			id: 'root',
 			label: 'project-vyasa',
-			icon: 'FolderOpen',
+			icon: FolderOpen,
 			children: [
 				{
 					id: 'src',
 					label: 'src',
-					icon: 'Folder',
+					icon: Folder,
 					children: [
-						{ id: 'app.html', label: 'app.html', icon: 'FileCode' },
+						{ id: 'app.html', label: 'app.html', icon: FileCode },
 						{
 							id: 'routes',
 							label: 'routes',
-							icon: 'Folder',
+							icon: Folder,
 							children: [
-								{ id: 'page.svelte', label: '+page.svelte', icon: 'FileCode' },
-								{ id: 'layout.svelte', label: '+layout.svelte', icon: 'FileCode' }
+								{ id: 'page.svelte', label: '+page.svelte', icon: FileCode },
+								{ id: 'layout.svelte', label: '+layout.svelte', icon: FileCode }
 							]
 						},
 						{
 							id: 'lib',
 							label: 'lib',
-							icon: 'Folder',
-							children: [{ id: 'components', label: 'components', icon: 'Folder' }]
+							icon: Folder,
+							children: [{ id: 'components', label: 'components', icon: Folder }]
 						}
 					]
 				},
-				{ id: 'package.json', label: 'package.json', icon: 'FileJson' },
-				{ id: 'readme.md', label: 'README.md', icon: 'FileText' },
-				{ id: 'tsconfig.json', label: 'tsconfig.json', icon: 'FileJson' }
+				{ id: 'package.json', label: 'package.json', icon: FileJson },
+				{ id: 'readme.md', label: 'README.md', icon: FileText },
+				{ id: 'tsconfig.json', label: 'tsconfig.json', icon: FileJson }
 			]
 		}
 	];
@@ -145,9 +171,9 @@ A modern IDE built with Svelte.
 	// --- Tabs Data ---
 	let activeTabId = $state('page.svelte');
 	let openTabs = $state<TabItem[]>([
-		{ id: 'page.svelte', label: '+page.svelte', icon: 'FileCode', closeable: true },
-		{ id: 'layout.svelte', label: '+layout.svelte', icon: 'FileCode', closeable: true },
-		{ id: 'readme.md', label: 'README.md', icon: 'FileText', closeable: true }
+		{ id: 'page.svelte', label: '+page.svelte', icon: FileCode, closeable: true },
+		{ id: 'layout.svelte', label: '+layout.svelte', icon: FileCode, closeable: true },
+		{ id: 'readme.md', label: 'README.md', icon: FileText, closeable: true }
 	]);
 
 	function handleFileSelect(node: TreeNode) {
@@ -190,7 +216,7 @@ A modern IDE built with Svelte.
 			<Button
 				variant="ghost"
 				size="icon"
-				icon={maximizedZone === 'content' ? 'Minimize2' : 'Maximize2'}
+				icon={maximizedZone === 'content' ? Minimize2 : Maximize2}
 				onclick={toggleMaximizeContent}
 				title={maximizedZone === 'content' ? 'Restore View' : 'Maximize Editor'}
 			/>
@@ -207,13 +233,13 @@ A modern IDE built with Svelte.
 {#snippet headerContent()}
 	<div class="header-container">
 		<div class="header-left">
-			<Button variant="ghost" size="icon" icon="Menu" />
+			<Button variant="ghost" size="icon" icon={Menu} />
 			<span class="app-title">Vyasa IDE</span>
 			<!-- Simplified Menu for Demo -->
 		</div>
 		<div class="header-center">
 			<div class="command-center">
-				<Icon name="Search" size={14} class="text-tertiary" />
+				<Icon icon={Search} size={14} class="text-tertiary" />
 				<span>project-vyasa</span>
 			</div>
 		</div>
@@ -223,7 +249,7 @@ A modern IDE built with Svelte.
 			<Button
 				variant={leftVisible ? 'secondary' : 'ghost'}
 				size="icon"
-				icon="PanelLeft"
+				icon={PanelLeft}
 				class={leftVisible ? 'active-t' : ''}
 				onclick={() => (leftVisible = !leftVisible)}
 				title="Toggle Left Sidebar"
@@ -231,7 +257,7 @@ A modern IDE built with Svelte.
 			<Button
 				variant={bottomVisible ? 'secondary' : 'ghost'}
 				size="icon"
-				icon="PanelBottom"
+				icon={PanelBottom}
 				class={bottomVisible ? 'active-t' : ''}
 				onclick={() => (bottomVisible = !bottomVisible)}
 				title="Toggle Bottom Panel"
@@ -239,7 +265,7 @@ A modern IDE built with Svelte.
 			<Button
 				variant={rightVisible ? 'secondary' : 'ghost'}
 				size="icon"
-				icon="PanelRight"
+				icon={PanelRight}
 				class={rightVisible ? 'active-t' : ''}
 				onclick={() => (rightVisible = !rightVisible)}
 				title="Toggle Right Sidebar"
@@ -248,7 +274,7 @@ A modern IDE built with Svelte.
 			<Button
 				variant={topVisible ? 'secondary' : 'ghost'}
 				size="icon"
-				icon="PanelTop"
+				icon={PanelTop}
 				class={topVisible ? 'active-t' : ''}
 				onclick={() => (topVisible = !topVisible)}
 				title="Toggle Top Panel"
@@ -263,7 +289,7 @@ A modern IDE built with Svelte.
 			<Button
 				variant="ghost"
 				size="icon"
-				icon="Files"
+				icon={Files}
 				onclick={() => handleActivityClick('files')}
 				title="Explorer"
 			/>
@@ -272,7 +298,7 @@ A modern IDE built with Svelte.
 			<Button
 				variant="ghost"
 				size="icon"
-				icon="Search"
+				icon={Search}
 				onclick={() => handleActivityClick('search')}
 				title="Search"
 			/>
@@ -281,21 +307,21 @@ A modern IDE built with Svelte.
 			<Button
 				variant="ghost"
 				size="icon"
-				icon="GitBranch"
+				icon={GitBranch}
 				onclick={() => handleActivityClick('git')}
 				title="Source Control"
 			/>
 		</div>
 		<div class="spacer"></div>
-		<Button variant="ghost" size="icon" icon="Settings" />
+		<Button variant="ghost" size="icon" icon={Settings} />
 	</div>
 {/snippet}
 
 {#snippet sidebarLeftContent()}
 	{#if activeActivityId === 'files'}
-		<Panel title="Explorer" icon="Files">
+		<Panel title="Explorer" icon={Files}>
 			{#snippet actions()}
-				<Button variant="ghost" size="icon" icon="MoreHorizontal" class="action-icon" />
+				<Button variant="ghost" size="icon" icon={MoreHorizontal} class="action-icon" />
 			{/snippet}
 			<div class="tree-container">
 				<Tree
@@ -307,7 +333,7 @@ A modern IDE built with Svelte.
 			</div>
 		</Panel>
 	{:else if activeActivityId === 'search'}
-		<Panel title="Search" icon="Search">
+		<Panel title="Search" icon={Search}>
 			<div class="p-2">
 				<div class="search-input-box">
 					<input
@@ -320,15 +346,15 @@ A modern IDE built with Svelte.
 			</div>
 		</Panel>
 	{:else if activeActivityId === 'git'}
-		<Panel title="Source Control" icon="GitBranch">
+		<Panel title="Source Control" icon={GitBranch}>
 			<div class="p-2 text-sm">
 				<div class="flex items-center gap-2 mb-2">
-					<Icon name="RefreshCw" size={12} />
+					<Icon icon={RefreshCw} size={12} />
 					<span>Changes</span>
 				</div>
 				<div class="text-xs text-secondary pl-4">
 					<div class="flex items-center gap-2 py-1">
-						<Icon name="FileText" size={12} />
+						<Icon icon={FileText} size={12} />
 						<span>+page.svelte</span>
 						<span class="text-tertiary ml-auto">M</span>
 					</div>
@@ -342,18 +368,18 @@ A modern IDE built with Svelte.
 	<div class="top-bar-content">
 		<div class="breadcrumb">
 			<span>project-vyasa</span>
-			<Icon name="ChevronRight" size={14} />
+			<Icon icon={ChevronRight} size={14} />
 			<span>src</span>
-			<Icon name="ChevronRight" size={14} />
+			<Icon icon={ChevronRight} size={14} />
 			<span>routes</span>
-			<Icon name="ChevronRight" size={14} />
+			<Icon icon={ChevronRight} size={14} />
 			<span>ide-demo</span>
 		</div>
 	</div>
 {/snippet}
 
 {#snippet sidebarRightContent()}
-	<Panel title="Outline" icon="List">
+	<Panel title="Outline" icon={List}>
 		<div class="p-2 text-sm text-secondary">
 			<div class="mb-2 font-semibold text-primary">Symbols</div>
 			<div class="pl-2">
@@ -366,12 +392,12 @@ A modern IDE built with Svelte.
 {/snippet}
 
 {#snippet panelBottomContent()}
-	<Panel title="Terminal" icon="Terminal" class="terminal-panel">
+	<Panel title="Terminal" icon={Terminal} class="terminal-panel">
 		{#snippet actions()}
 			<Button
 				variant="ghost"
 				size="icon"
-				icon={maximizedZone === 'bottom' ? 'Minimize2' : 'Maximize2'}
+				icon={maximizedZone === 'bottom' ? Minimize2 : Maximize2}
 				class="action-icon"
 				onclick={toggleMaximizeBottom}
 				title={maximizedZone === 'bottom' ? 'Restore' : 'Maximize Panel'}
@@ -379,7 +405,7 @@ A modern IDE built with Svelte.
 			<Button
 				variant="ghost"
 				size="icon"
-				icon="X"
+				icon={X}
 				class="action-icon"
 				onclick={() => {
 					bottomVisible = false;
@@ -405,11 +431,11 @@ A modern IDE built with Svelte.
 {#snippet statusBarContent()}
 	<div class="status-bar">
 		<button class="status-item">
-			<Icon name="GitBranch" size={12} />
+			<Icon icon={GitBranch} size={12} />
 			<span>main</span>
 		</button>
 		<button class="status-item">
-			<Icon name="RefreshCw" size={12} />
+			<Icon icon={RefreshCw} size={12} />
 			<span>0</span>
 		</button>
 		<div class="spacer"></div>
@@ -420,7 +446,7 @@ A modern IDE built with Svelte.
 			<span>UTF-8</span>
 		</button>
 		<button class="status-item" onclick={() => (bottomVisible = !bottomVisible)}>
-			<Icon name="Layout" size={12} />
+			<Icon icon={Layout} size={12} />
 		</button>
 	</div>
 {/snippet}

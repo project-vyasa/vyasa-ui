@@ -1,13 +1,14 @@
 <script lang="ts">
 	import Button from '$lib/components/atoms/Button/Button.svelte';
 	import Icon from '$lib/components/atoms/Icon/Icon.svelte';
+	import { Codesandbox, Layout, ArrowRight, Component } from 'lucide-svelte';
 </script>
 
 <div class="landing-page">
 	<main class="hero-section">
 		<div class="content-wrapper">
 			<div class="logo-area">
-				<Icon name="Codesandbox" size={64} class="text-action-primary" />
+				<Icon icon={Codesandbox} size={64} class="text-action-primary" />
 			</div>
 			<h1 class="title">Vyasa UI</h1>
 			<p class="subtitle">
@@ -19,14 +20,14 @@
 				<a href="/ide-demo" class="card-link">
 					<div class="card">
 						<div class="card-icon">
-							<Icon name="Layout" size={32} />
+							<Icon icon={Layout} size={32} />
 						</div>
 						<div class="card-content">
 							<h3>IDE Demo</h3>
 							<p>Experience the full IDE layout with the new CodeEditor.</p>
 						</div>
 						<div class="card-arrow">
-							<Icon name="ArrowRight" size={20} />
+							<Icon icon={ArrowRight} size={20} />
 						</div>
 					</div>
 				</a>
@@ -34,14 +35,14 @@
 				<a href="/kitchen-sink" class="card-link">
 					<div class="card">
 						<div class="card-icon">
-							<Icon name="Component" size={32} />
+							<Icon icon={Component} size={32} />
 						</div>
 						<div class="card-content">
 							<h3>Kitchen Sink</h3>
 							<p>Explore the complete atomic component library.</p>
 						</div>
 						<div class="card-arrow">
-							<Icon name="ArrowRight" size={20} />
+							<Icon icon={ArrowRight} size={20} />
 						</div>
 					</div>
 				</a>
