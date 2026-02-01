@@ -8,11 +8,13 @@
 	import { html } from '@codemirror/lang-html';
 	import { markdown } from '@codemirror/lang-markdown';
 	import { oneDark } from '@codemirror/theme-one-dark';
+	import { vyasaLanguage } from './vyasaLanguage';
 
 	interface Props {
 		value: string;
 		language?: 'markdown' | 'html' | 'handlebars' | 'typescript' | 'vy';
 		readonly?: boolean;
+		lineWrapping?: boolean;
 		theme?: 'light' | 'dark';
 		class?: string;
 	}
@@ -21,6 +23,7 @@
 		value = $bindable(),
 		language = 'markdown',
 		readonly = false,
+		lineWrapping = false,
 		theme = 'dark',
 		class: className = ''
 	}: Props = $props();
@@ -32,6 +35,7 @@
 	const languageConf = new Compartment();
 	const themeConf = new Compartment();
 	const readOnlyConf = new Compartment();
+	const lineWrappingConf = new Compartment();
 
 	function getLanguageExtension(lang: string) {
 		switch (lang) {
@@ -40,8 +44,9 @@
 			case 'html':
 			case 'handlebars': // Handlebars uses HTML mode for now
 				return html();
+			case 'vy':
+				return vyasaLanguage;
 			case 'markdown':
-			case 'vy': // Vy uses basic markdown for now
 			default:
 				return markdown();
 		}
@@ -60,6 +65,7 @@
 				languageConf.of(getLanguageExtension(language)),
 				themeConf.of(getThemeExtension(theme)),
 				readOnlyConf.of(EditorState.readOnly.of(readonly)),
+				lineWrappingConf.of(lineWrapping ? EditorView.lineWrapping : []),
 				EditorView.updateListener.of((update) => {
 					if (update.docChanged) {
 						value = update.state.doc.toString();
@@ -109,6 +115,14 @@
 		if (view) {
 			view.dispatch({
 				effects: readOnlyConf.reconfigure(EditorState.readOnly.of(readonly))
+			});
+		}
+	});
+
+	$effect(() => {
+		if (view) {
+			view.dispatch({
+				effects: lineWrappingConf.reconfigure(lineWrapping ? EditorView.lineWrapping : [])
 			});
 		}
 	});

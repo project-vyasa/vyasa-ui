@@ -225,6 +225,7 @@ A modern IDE built with Svelte.
 			bind:value={fileContentMap[filename]}
 			language={getLanguageFromFilename(filename)}
 			theme={themeContext.current}
+			lineWrapping={true}
 			class="h-full border-0"
 		/>
 	</div>
