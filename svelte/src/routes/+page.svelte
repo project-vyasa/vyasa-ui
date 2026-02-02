@@ -1,7 +1,7 @@
 <script lang="ts">
 	import Button from '$lib/components/atoms/Button/Button.svelte';
 	import Icon from '$lib/components/atoms/Icon/Icon.svelte';
-	import { Codesandbox, Layout, ArrowRight, Component } from 'lucide-svelte';
+	import { Codesandbox, Layout, ArrowRight, Component, Settings } from 'lucide-svelte';
 </script>
 
 <div class="landing-page">
@@ -40,6 +40,21 @@
 						<div class="card-content">
 							<h3>Kitchen Sink</h3>
 							<p>Explore the complete atomic component library.</p>
+						</div>
+						<div class="card-arrow">
+							<Icon icon={ArrowRight} size={20} />
+						</div>
+					</div>
+				</a>
+
+				<a href="/settings-demo" class="card-link">
+					<div class="card">
+						<div class="card-icon">
+							<Icon icon={Settings} size={32} />
+						</div>
+						<div class="card-content">
+							<h3>Settings Panel</h3>
+							<p>A schema-driven settings UI component.</p>
 						</div>
 						<div class="card-arrow">
 							<Icon icon={ArrowRight} size={20} />
@@ -111,7 +126,7 @@
 
 	@media (min-width: 640px) {
 		.actions {
-			grid-template-columns: 1fr 1fr;
+			grid-template-columns: 1fr 1fr 1fr;
 		}
 	}
 
