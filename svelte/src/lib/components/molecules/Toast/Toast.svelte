@@ -1,7 +1,6 @@
 <script lang="ts">
 	import Icon from '$lib/components/atoms/Icon/Icon.svelte';
 	import { toast, type Toast } from '$lib/stores/toast.svelte.js';
-	import { fly } from 'svelte/transition';
 	import { Info, CheckCircle, AlertTriangle, AlertOctagon, X } from 'lucide-svelte';
 
 	interface Props {
@@ -20,7 +19,7 @@
 	let iconComponent = $derived(icons[item.variant || 'info'] || Info);
 </script>
 
-<div class="toast {item.variant || 'info'}" role="alert" transition:fly={{ y: 20, duration: 300 }}>
+<div class="toast {item.variant || 'info'}" role="alert">
 	<div class="toast-icon">
 		<Icon icon={iconComponent} size={20} />
 	</div>
@@ -47,6 +46,18 @@
 		min-width: 20rem;
 		max-width: 24rem;
 		pointer-events: auto;
+		animation: toast-slide-in 0.3s ease-out;
+	}
+
+	@keyframes toast-slide-in {
+		from {
+			opacity: 0;
+			transform: translateY(20px);
+		}
+		to {
+			opacity: 1;
+			transform: translateY(0);
+		}
 	}
 
 	.toast-message {

@@ -2,12 +2,12 @@
 	import Icon from '../../atoms/Icon/Icon.svelte';
 	import Button from '../../atoms/Button/Button.svelte';
 	import { X } from 'lucide-svelte';
-	import type { ComponentType } from 'svelte';
+	import type { Component } from 'svelte';
 
 	export interface TabItem {
 		id: string;
 		label: string;
-		icon?: ComponentType;
+		icon?: Component;
 		content?: import('svelte').Snippet;
 		closeable?: boolean;
 	}

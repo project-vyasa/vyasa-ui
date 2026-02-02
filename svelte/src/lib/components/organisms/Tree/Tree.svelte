@@ -1,10 +1,10 @@
 <script module lang="ts">
-	import type { ComponentType } from 'svelte';
+	import type { Component } from 'svelte';
 
 	export interface TreeNode {
 		id: string;
 		label: string;
-		icon?: ComponentType;
+		icon?: Component;
 		children?: TreeNode[];
 		[key: string]: any;
 	}
