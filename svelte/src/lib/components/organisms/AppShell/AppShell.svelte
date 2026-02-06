@@ -57,40 +57,29 @@
 	// --- Track Sizes ---
 	function getColSizes(zone: string) {
 		if (zone === 'bottom') {
-			// Bottom maximized: hide everything except appbar (optional) or just hide sidebars
-			// Current requirement: Bottom takes full width of content area
-			// Actually user said "hides sidebars and app bar".
-			// So: 0 0 1fr 0
-			// Wait, if app bar is hidden, grid areas might break if we don't handle it in template or sizes.
-			// Sizes 0px is safe.
-			return `0px 0px 1fr 0px`;
+			return `0px 0px minmax(0, 1fr) 0px`;
 		}
 		if (zone === 'content') {
-			// Content maximized: hide everything
-			return `0px 0px 1fr 0px`;
+			return `0px 0px minmax(0, 1fr) 0px`;
 		}
 		// Default
 		return `${appBar ? '3rem' : '0px'} 
 		${leftVisible && sidebarLeft ? `${leftWidth}px` : '0px'} 
-		1fr 
+		minmax(0, 1fr) 
 		${rightVisible && sidebarRight ? `${rightWidth}px` : '0px'}`;
 	}
 
 	function getRowSizes(zone: string) {
 		if (zone === 'bottom') {
-			// Bottom maximized: Header, 0, 0, 1fr, Status
-			// Wait, bottom row is the 4th row.
-			// Rows: Header, Top, Content, Bottom, Status
-			return `${header ? 'auto' : '0px'} 0px 0px 1fr ${statusBar ? '1.5rem' : '0px'}`;
+			return `${header ? 'auto' : '0px'} 0px 0px minmax(0, 1fr) ${statusBar ? '1.5rem' : '0px'}`;
 		}
 		if (zone === 'content') {
-			// Content maximized: Header, 0, 1fr, 0, Status
-			return `${header ? 'auto' : '0px'} 0px 1fr 0px ${statusBar ? '1.5rem' : '0px'}`;
+			return `${header ? 'auto' : '0px'} 0px minmax(0, 1fr) 0px ${statusBar ? '1.5rem' : '0px'}`;
 		}
 		// Default
 		return `${header ? 'auto' : '0px'} 
 		${topVisible && sidebarTop ? `${topHeight}px` : '0px'}
-		1fr 
+		minmax(0, 1fr) 
 		${bottomVisible && panelBottom ? `${bottomHeight}px` : '0px'} 
 		${statusBar ? '1.5rem' : '0px'}`;
 	}
@@ -146,6 +135,7 @@
 
 <div
 	class="app-shell"
+	class:is-resizing={!!isResizing}
 	style:grid-template-areas={gridTemplate}
 	style:grid-template-columns={colSizes}
 	style:grid-template-rows={rowSizes}
@@ -238,6 +228,11 @@
 		overflow: hidden;
 		background-color: var(--bg-surface);
 		color: var(--text-primary);
+	}
+
+	/* Prevent iframe interference */
+	.app-shell.is-resizing :global(iframe) {
+		pointer-events: none;
 	}
 
 	/* Grid Areas */
