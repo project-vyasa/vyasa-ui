@@ -197,41 +197,8 @@
 	.h-screen {
 		height: 100vh;
 	}
-	.w-full {
-		width: 100%;
-	}
-	.flex {
-		display: flex;
-	}
-	.flex-col {
-		flex-direction: column;
-	}
-	.flex-1 {
-		flex: 1;
-	}
-	.h-full {
-		height: 100%;
-	}
-	.overflow-hidden {
-		overflow: hidden;
-	}
-	.overflow-auto {
-		overflow: auto;
-	}
-	.p-4 {
-		padding: 1rem;
-	}
-	.border-b {
-		border-bottom: 1px solid var(--border-base);
-	}
 	.border-r {
 		border-right: 1px solid var(--border-base);
-	}
-	.border-0 {
-		border: 0;
-	}
-	.rounded-none {
-		border-radius: 0;
 	}
 	.bg-surface-alt {
 		background-color: var(--bg-surface-alt);

@@ -1,4 +1,4 @@
-import type { Component } from 'svelte';
+import type { Component, ComponentType } from 'svelte';
 
 export type SettingType = 'text' | 'number' | 'boolean' | 'color' | 'select' | 'font';
 
@@ -23,6 +23,6 @@ export interface SettingGroup {
 export interface SettingSection {
     id: string;
     title: string;
-    icon?: Component; // Lucide icon
+    icon?: Component | ComponentType; // Lucide icon
     groups: SettingGroup[];
 }

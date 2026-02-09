@@ -14,7 +14,13 @@
 	let { schema, data = $bindable(), class: className = '' }: Props = $props();
 
 	let searchQuery = $state('');
-	let activeSectionId = $state(schema.length > 0 ? schema[0].id : '');
+	let activeSectionId = $state('');
+
+	$effect(() => {
+		if (schema.length > 0 && !activeSectionId) {
+			activeSectionId = schema[0].id;
+		}
+	});
 	let contentContainer: HTMLElement;
 	let observer: IntersectionObserver;
 	let isScrollingFromClick = false;

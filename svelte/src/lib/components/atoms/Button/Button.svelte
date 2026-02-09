@@ -1,6 +1,6 @@
 <script lang="ts">
 	import type { HTMLButtonAttributes } from 'svelte/elements';
-	import type { Component } from 'svelte';
+	import type { Component, ComponentType } from 'svelte';
 	import Icon from '../Icon/Icon.svelte';
 	import { Loader2 } from 'lucide-svelte';
 
@@ -8,7 +8,7 @@
 		variant?: 'primary' | 'secondary' | 'outline' | 'ghost' | 'danger' | 'success' | 'warning';
 		size?: 'sm' | 'md' | 'lg' | 'icon';
 		loading?: boolean;
-		icon?: Component;
+		icon?: Component | ComponentType;
 		children?: import('svelte').Snippet;
 	}
 
