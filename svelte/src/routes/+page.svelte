@@ -1,7 +1,7 @@
 <script lang="ts">
 	import Button from '$lib/components/atoms/Button/Button.svelte';
 	import Icon from '$lib/components/atoms/Icon/Icon.svelte';
-	import { Codesandbox, Layout, ArrowRight, Component, Settings } from 'lucide-svelte';
+	import { Codesandbox, Layout, ArrowRight, Component, Settings, FormInput } from 'lucide-svelte';
 </script>
 
 <div class="landing-page">
@@ -55,6 +55,23 @@
 						<div class="card-content">
 							<h3>Settings Panel</h3>
 							<p>A schema-driven settings UI component.</p>
+						</div>
+						<div class="card-arrow">
+							<Icon icon={ArrowRight} size={20} />
+						</div>
+					</div>
+				</a>
+
+				<a href="/forms-demo" class="card-link">
+					<div class="card">
+						<div class="card-icon">
+							<Icon icon={FormInput} size={32} />
+						</div>
+						<div class="card-content">
+							<h3>Forms Demo</h3>
+							<p>
+								Showcase of the comprehensive form system including grid layouts and rich inputs.
+							</p>
 						</div>
 						<div class="card-arrow">
 							<Icon icon={ArrowRight} size={20} />

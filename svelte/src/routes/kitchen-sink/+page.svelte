@@ -130,31 +130,15 @@
 	];
 	let selectVal1 = $state('');
 	let selectVal2 = $state(['svelte', 'vue']);
+	import DemoToolbar from '$lib/components/organisms/DemoToolbar/DemoToolbar.svelte';
+	// ... (other imports)
 </script>
 
 <div class="kitchen-sink">
-	<header class="sticky-header">
-		<div class="header-content">
-			<div>
-				<h1 class="heading-1">Kitchen Sink</h1>
-				<p class="description">Visual test suite for components.</p>
-			</div>
-			<div class="controls">
-				<Button
-					variant="outline"
-					onclick={() => themeCtx.toggleTheme()}
-					icon={themeCtx.theme === 'dark' ? Sun : Moon}
-				>
-					{themeCtx.theme === 'light' ? 'Dark Mode' : 'Light Mode'}
-				</Button>
-				<Button variant="outline" onclick={() => themeCtx.cycleDensity()} icon={Maximize2}>
-					Density: {themeCtx.density}
-				</Button>
-			</div>
-		</div>
-	</header>
+	<DemoToolbar title="Kitchen Sink" />
 
 	<section class="section">
+		<!-- ... -->
 		<h2 class="heading-2">Typography</h2>
 		<div class="grid-2-col">
 			<div class="flex flex-col gap-2">
@@ -517,32 +501,6 @@
 		gap: 2rem; /* space-y-8 equivalent */
 		font-family: var(--font-sans);
 		color: var(--text-primary);
-	}
-
-	.sticky-header {
-		position: sticky;
-		top: 0;
-		z-index: 50;
-		background-color: var(--bg-surface);
-		padding: 1rem 0;
-		border-bottom: 1px solid var(--border-base);
-		margin-top: -2rem; /* Counteract parent padding to sit flush against viewport edge if needed, but here it's inside padding */
-		/* Actually, parent has padding 2rem. To be truly sticky at top of viewport, we need to handle that or let it stick within the container. 
-		   Ideally, kitchen-sink main padding should be handled differently or we use negative margins. 
-		   Let's try negative margin to pull it up. */
-		margin: -2rem -2rem 0 -2rem;
-		padding: 1rem 2rem;
-	}
-
-	.header-content {
-		display: flex;
-		justify-content: space-between;
-		align-items: center;
-	}
-
-	.controls {
-		display: flex;
-		gap: 0.5rem;
 	}
 
 	.section {

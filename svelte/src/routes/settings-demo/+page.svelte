@@ -25,6 +25,7 @@
 			groups: [
 				{
 					title: 'Font',
+					columns: 2,
 					items: [
 						{
 							id: 'editor.fontFamily',
@@ -36,7 +37,8 @@
 								{ label: 'Source Code Pro', value: 'Source Code Pro' },
 								{ label: 'Courier New', value: 'Courier New' }
 							],
-							description: 'Controls the font family.'
+							description: 'Controls the font family.',
+							colSpan: 2
 						},
 						{
 							id: 'editor.fontSize',
@@ -167,6 +169,7 @@
 		}
 	];
 
+	import DemoToolbar from '$lib/components/organisms/DemoToolbar/DemoToolbar.svelte';
 	import { onDestroy } from 'svelte';
 
 	onDestroy(() => {
@@ -179,10 +182,8 @@
 </script>
 
 <div class="h-screen flex flex-col">
-	<div class="p-4 border-b border-border-base bg-surface-alt">
-		<h1 class="text-xl font-bold">Settings Panel Demo</h1>
-		<p class="text-secondary text-sm">Modify settings below and watch the JSON object update.</p>
-	</div>
+	<DemoToolbar title="Settings Panel Demo" backUrl="/" />
+	<!-- <div class="p-4 border-b border-border-base bg-surface-alt"> ... removed ... </div> -->
 	<div class="flex-1 flex overflow-hidden">
 		<!-- Settings Panel uses full height of parent -->
 		<div class="flex-[2] h-full border-r border-border-base">

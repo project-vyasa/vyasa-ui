@@ -3,6 +3,7 @@
 	import SettingItem from './SettingItem.svelte';
 	import Icon from '$lib/components/atoms/Icon/Icon.svelte';
 	import Button from '$lib/components/atoms/Button/Button.svelte';
+	import Form from '$lib/components/molecules/Form/Form.svelte';
 	import { Search } from 'lucide-svelte';
 
 	interface Props {
@@ -188,11 +189,11 @@
 								{#if group.title}
 									<h3>{group.title}</h3>
 								{/if}
-								<div class="group-items">
+								<Form columns={group.columns || 1} gap="md">
 									{#each group.items as item (item.id)}
 										<SettingItem {item} bind:value={data[item.id]} />
 									{/each}
-								</div>
+								</Form>
 							</div>
 						{/each}
 					</div>

@@ -5,11 +5,27 @@
 		'aria-invalid'?: boolean | 'grammar' | 'spelling';
 		error?: boolean;
 		fullWidth?: boolean;
+		type?:
+			| 'text'
+			| 'email'
+			| 'password'
+			| 'number'
+			| 'date'
+			| 'datetime-local'
+			| 'time'
+			| 'month'
+			| 'week'
+			| 'tel'
+			| 'url'
+			| 'search'
+			| 'file'
+			| 'hidden';
 	}
 
 	let {
 		class: className = '',
 		value = $bindable(),
+		type = 'text',
 		disabled,
 		error = false,
 		fullWidth = false,
@@ -22,6 +38,7 @@
 </script>
 
 <input
+	{type}
 	class={cx('input', error && 'error', fullWidth && 'full-width', className)}
 	bind:value
 	{disabled}
@@ -46,6 +63,7 @@
 
 		/* Density handled via control-height-base */
 		height: var(--control-height-base);
+		width: auto; /* Default to auto width unless fullWidth */
 	}
 
 	/* Placeholder opacity needs browser prefixes typically, keeping it simple for now standard */
@@ -62,6 +80,7 @@
 	.input:disabled {
 		cursor: not-allowed;
 		opacity: 0.5;
+		background-color: var(--bg-surface-alt);
 	}
 
 	.input.error {
@@ -74,5 +93,31 @@
 
 	.input.full-width {
 		width: 100%;
+	}
+
+	/* Type specific styles */
+	input[type='search'] {
+		border-radius: 9999px; /* Rounded pill for search */
+	}
+
+	/* File input styling hacks usually needed, but basic for now */
+	input[type='file'] {
+		padding: 0.125rem;
+		line-height: normal;
+	}
+	input[type='file']::file-selector-button {
+		margin-right: 0.75rem;
+		border: none;
+		background: var(--bg-surface-alt);
+		padding: 0.25rem 0.5rem;
+		border-radius: var(--control-radius);
+		color: var(--text-primary);
+		cursor: pointer;
+		font-size: var(--text-xs);
+		font-family: var(--font-sans);
+		transition: background-color 0.2s;
+	}
+	input[type='file']::file-selector-button:hover {
+		background-color: var(--bg-surface-hover);
 	}
 </style>

@@ -1,6 +1,17 @@
 import type { Component, ComponentType } from 'svelte';
 
-export type SettingType = 'text' | 'number' | 'boolean' | 'color' | 'select' | 'font';
+export type SettingType =
+    | 'text'
+    | 'number'
+    | 'boolean'
+    | 'color'
+    | 'select'
+    | 'font'
+    | 'date'
+    | 'time'
+    | 'email'
+    | 'url'
+    | 'password';
 
 export interface SettingItem {
     id: string; // Key in the data object (can be nested path like 'editor.fontSize')
@@ -13,11 +24,13 @@ export interface SettingItem {
     step?: number; // For 'number'
     defaultValue?: any;
     placeholder?: string;
+    colSpan?: number; // For grid layout (1-4)
 }
 
 export interface SettingGroup {
     title?: string;
     items: SettingItem[];
+    columns?: 1 | 2 | 3 | 4;
 }
 
 export interface SettingSection {
