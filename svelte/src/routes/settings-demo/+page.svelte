@@ -166,6 +166,16 @@
 			]
 		}
 	];
+
+	import { onDestroy } from 'svelte';
+
+	onDestroy(() => {
+		if (typeof document !== 'undefined') {
+			document.body.style.overflow = '';
+			document.body.style.height = '';
+			document.body.style.margin = '';
+		}
+	});
 </script>
 
 <div class="h-screen flex flex-col">
@@ -194,8 +204,40 @@
 		height: 100vh;
 		overflow: hidden;
 	}
+	/* Use :global for classes passed to components to avoid unused selector warnings */
+	:global(.border-0) {
+		border: 0;
+	}
+	:global(.rounded-none) {
+		border-radius: 0;
+	}
+
 	.h-screen {
 		height: 100vh;
+	}
+	.flex {
+		display: flex;
+	}
+	.flex-col {
+		flex-direction: column;
+	}
+	.flex-1 {
+		flex: 1;
+	}
+	.h-full {
+		height: 100%;
+	}
+	.overflow-hidden {
+		overflow: hidden;
+	}
+	.overflow-auto {
+		overflow: auto;
+	}
+	.p-4 {
+		padding: 1rem;
+	}
+	.border-b {
+		border-bottom: 1px solid var(--border-base);
 	}
 	.border-r {
 		border-right: 1px solid var(--border-base);
