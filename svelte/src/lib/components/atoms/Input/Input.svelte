@@ -1,10 +1,13 @@
 <script lang="ts">
 	import type { HTMLInputAttributes } from 'svelte/elements';
+	import type { Snippet } from 'svelte';
 
 	interface Props extends HTMLInputAttributes {
 		'aria-invalid'?: boolean | 'grammar' | 'spelling';
 		error?: boolean;
 		fullWidth?: boolean;
+		prefix?: Snippet;
+		suffix?: Snippet;
 		type?:
 			| 'text'
 			| 'email'
@@ -29,6 +32,8 @@
 		disabled,
 		error = false,
 		fullWidth = false,
+		prefix,
+		suffix,
 		...rest
 	}: Props = $props();
 
@@ -37,72 +42,117 @@
 	}
 </script>
 
-<input
-	{type}
-	class={cx('input', error && 'error', fullWidth && 'full-width', className)}
-	bind:value
-	{disabled}
-	aria-invalid={error ? true : undefined}
-	{...rest}
-/>
+<div
+	class={cx(
+		'input-wrapper',
+		error && 'error',
+		fullWidth && 'full-width',
+		disabled && 'disabled',
+		className
+	)}
+>
+	{#if prefix}
+		<div class="input-prefix">{@render prefix()}</div>
+	{/if}
+
+	<input
+		{type}
+		class="input-control"
+		bind:value
+		{disabled}
+		aria-invalid={error ? true : undefined}
+		{...rest}
+	/>
+
+	{#if suffix}
+		<div class="input-suffix">{@render suffix()}</div>
+	{/if}
+</div>
 
 <style>
-	.input {
+	.input-wrapper {
 		display: flex;
+		align-items: center;
 		border-radius: var(--control-radius);
 		border: 1px solid var(--border-base);
-		background-color: transparent;
-		padding: 0.25rem 0.75rem;
+		background-color: var(--bg-surface);
+		padding: 0 0.75rem; /* Padding horizontal on wrapper */
 		box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
 		transition:
 			border-color 0.2s,
 			box-shadow 0.2s;
-		font-family: var(--font-sans);
-		font-size: var(--text-base);
-		color: var(--text-primary);
-
-		/* Density handled via control-height-base */
+		/* Height handled by wrapper content or explicit height */
 		height: var(--control-height-base);
-		width: auto; /* Default to auto width unless fullWidth */
+		width: auto;
+		position: relative;
 	}
 
-	/* Placeholder opacity needs browser prefixes typically, keeping it simple for now standard */
-	.input::placeholder {
-		color: var(--text-tertiary);
-	}
-
-	.input:focus-visible {
-		outline: none;
-		box-shadow: 0 0 0 2px var(--border-focus);
+	.input-wrapper:focus-within {
 		border-color: var(--border-focus);
+		box-shadow: 0 0 0 2px var(--border-focus);
 	}
 
-	.input:disabled {
-		cursor: not-allowed;
-		opacity: 0.5;
-		background-color: var(--bg-surface-alt);
-	}
-
-	.input.error {
+	.input-wrapper.error {
 		border-color: var(--status-error);
 	}
-	.input.error:focus-visible {
+	.input-wrapper.error:focus-within {
 		box-shadow: 0 0 0 2px var(--status-error);
 		border-color: var(--status-error);
 	}
 
-	.input.full-width {
+	.input-wrapper.disabled {
+		cursor: not-allowed;
+		opacity: 0.6;
+		background-color: var(--bg-surface-alt);
+	}
+
+	.input-wrapper.full-width {
 		width: 100%;
 	}
 
-	/* Type specific styles */
-	input[type='search'] {
-		border-radius: 9999px; /* Rounded pill for search */
+	/* The actual input element */
+	.input-control {
+		flex: 1;
+		min-width: 0;
+		border: none;
+		background: transparent;
+		padding: 0.25rem 0; /* Vertical padding only */
+		height: 100%;
+		font-family: var(--font-sans);
+		font-size: var(--text-base);
+		color: var(--text-primary);
+		outline: none;
 	}
 
-	/* File input styling hacks usually needed, but basic for now */
+	.input-control::placeholder {
+		color: var(--text-tertiary);
+	}
+
+	.input-control:disabled {
+		cursor: not-allowed;
+	}
+
+	.input-prefix,
+	.input-suffix {
+		display: flex;
+		align-items: center;
+		color: var(--text-secondary);
+	}
+	.input-prefix {
+		margin-right: 0.5rem;
+	}
+	.input-suffix {
+		margin-left: 0.5rem;
+	}
+
+	/* Search styling tweaks */
+	.input-wrapper:has(input[type='search']) {
+		border-radius: 9999px;
+	}
+
+	/* File input special handling */
 	input[type='file'] {
-		padding: 0.125rem;
+		padding: 0.125rem 0;
 		line-height: normal;
 	}
 	input[type='file']::file-selector-button {

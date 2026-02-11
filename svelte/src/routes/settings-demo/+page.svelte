@@ -237,32 +237,15 @@
 	.p-4 {
 		padding: 1rem;
 	}
-	.border-b {
-		border-bottom: 1px solid var(--border-base);
-	}
 	.border-r {
 		border-right: 1px solid var(--border-base);
 	}
-	.bg-surface-alt {
-		background-color: var(--bg-surface-alt);
-	}
+	/* Removed unused utility classes flagged by svelte-check */
 	.bg-surface-elevated {
 		background-color: var(--bg-surface-elevated);
 	}
-	.text-xl {
-		font-size: 1.25rem;
-	}
-	.font-bold {
-		font-weight: 700;
-	}
 	.font-semibold {
 		font-weight: 600;
-	}
-	.text-secondary {
-		color: var(--text-secondary);
-	}
-	.text-sm {
-		font-size: 0.875rem;
 	}
 	.text-xs {
 		font-size: 0.75rem;

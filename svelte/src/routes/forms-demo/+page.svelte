@@ -9,20 +9,34 @@
 	import Textarea from '$lib/components/atoms/Textarea/Textarea.svelte';
 	import Checkbox from '$lib/components/atoms/Checkbox/Checkbox.svelte';
 	import Button from '$lib/components/atoms/Button/Button.svelte';
-	import { User, Mail, Calendar, MapPin, Globe, Phone, FileText } from 'lucide-svelte';
+	import { Search as SearchIcon } from 'lucide-svelte';
 	import Icon from '$lib/components/atoms/Icon/Icon.svelte';
 
 	let formData = $state({
+		// Search
+		search: '',
+		// Profile
 		firstName: '',
 		lastName: '',
 		email: '',
 		bio: '',
+		// Preferences
 		role: 'developer',
-		notifications: true,
 		themeColor: '#007bff',
 		dob: '',
+		notifications: true,
+		// Contact
+		phone: '',
 		website: '',
 		country: 'usa',
+		// Typography
+		fontFamily: 'inter',
+		fontSize: 16,
+		// Date & Time
+		meetingTime: '',
+		month: '',
+		week: '',
+		// Terms
 		agreeToTerms: false
 	});
 
@@ -36,8 +50,15 @@
 		{ label: 'Product Manager', value: 'pm' }
 	];
 
+	const fonts = [
+		{ label: 'Inter', value: 'inter' },
+		{ label: 'Roboto', value: 'roboto' },
+		{ label: 'Fira Code', value: 'fira-code' },
+		{ label: 'Comic Sans MS', value: 'comic-sans' }
+	];
+
 	function validate() {
-		if (!formData.email.includes('@')) {
+		if (formData.email && !formData.email.includes('@')) {
 			errors.email = 'Please enter a valid email address';
 		} else {
 			errors.email = '';
@@ -49,6 +70,15 @@
 	<DemoToolbar title="Form System Demo" backUrl="/" />
 
 	<div class="content">
+		<!-- Search Bar -->
+		<section class="search-section">
+			<Input type="search" placeholder="Search..." bind:value={formData.search} fullWidth>
+				{#snippet prefix()}
+					<Icon icon={SearchIcon} size={18} class="text-secondary" />
+				{/snippet}
+			</Input>
+		</section>
+
 		<!-- Section 1: Basic Grid Layout -->
 		<section class="card">
 			<header>
@@ -98,8 +128,8 @@
 		<!-- Section 2: Horizontal Layout & Specialized Inputs -->
 		<section class="card">
 			<header>
-				<h2>Preferences & Details</h2>
-				<p>Demonstrating horizontal layout and specialized inputs.</p>
+				<h2>Preferences</h2>
+				<p>Demonstrating horizontal layout, Select, Color, and Switch.</p>
 			</header>
 			<div class="card-body">
 				<Form gap="md">
@@ -117,12 +147,11 @@
 						<InputColor id="color" bind:value={formData.themeColor} />
 					</FormField>
 
-					<FormField id="dob" label="Date of Birth" layout="horizontal" align="center">
-						<Input type="date" id="dob" bind:value={formData.dob} />
-					</FormField>
-
 					<FormField id="notifications" label="Notifications" layout="horizontal" align="center">
-						<div class="flex items-center gap-2">
+						<div
+							class="flex items-center gap-2"
+							style:min-height="var(--control-height-base, 2.5rem)"
+						>
 							<Switch id="notifications" bind:checked={formData.notifications} />
 							<span class="text-sm text-secondary"
 								>{formData.notifications ? 'Enabled' : 'Disabled'}</span
@@ -133,18 +162,24 @@
 			</div>
 		</section>
 
-		<!-- Section 3: Dense Grid (4 Columns) -->
+		<!-- Section 3: Dense Grid (3 Columns) with Contact Info -->
 		<section class="card">
 			<header>
 				<h2>Contact Details</h2>
-				<p>A dense 3-column layout for compact data entry.</p>
+				<p>A dense 3-column layout using Tel and URL inputs.</p>
 			</header>
 			<div class="card-body">
 				<Form columns={3} gap="sm">
-					<FormField id="phone" label="Phone">
-						<Input type="tel" id="phone" placeholder="+1 (555) 000-0000" fullWidth />
+					<FormField id="phone" label="Phone (Tel)">
+						<Input
+							type="tel"
+							id="phone"
+							bind:value={formData.phone}
+							placeholder="+1 (555) 000-0000"
+							fullWidth
+						/>
 					</FormField>
-					<FormField id="website" label="Website">
+					<FormField id="website" label="Website (URL)">
 						<Input
 							type="url"
 							id="website"
@@ -168,7 +203,58 @@
 			</div>
 		</section>
 
-		<!-- Section 4: Checkbox & Actions -->
+		<!-- Section: Typography -->
+		<section class="card">
+			<header>
+				<h2>Typography</h2>
+				<p>Font selection and numeric sizing.</p>
+			</header>
+			<div class="card-body">
+				<Form columns={2} gap="md">
+					<FormField id="fontFamily" label="Font Family">
+						<Select id="fontFamily" options={fonts} bind:value={formData.fontFamily} />
+					</FormField>
+					<FormField id="fontSize" label="Font Size (px)">
+						<Input type="number" id="fontSize" bind:value={formData.fontSize} min={8} max={72} />
+					</FormField>
+				</Form>
+				<div class="p-4 mt-4 border border-border-base rounded bg-surface-alt">
+					<p
+						style:font-family={formData.fontFamily}
+						style:font-size="{formData.fontSize}px"
+						class="transition-all"
+					>
+						The quick brown fox jumps over the lazy dog.
+					</p>
+				</div>
+			</div>
+		</section>
+
+		<!-- Section: Date & Time -->
+		<section class="card">
+			<header>
+				<h2>Date & Time</h2>
+				<p>Comprehensive date and time inputs.</p>
+			</header>
+			<div class="card-body">
+				<Form columns={2} gap="md">
+					<FormField id="dob" label="Date of Birth (Date)">
+						<Input type="date" id="dob" bind:value={formData.dob} fullWidth />
+					</FormField>
+					<FormField id="meetingTime" label="Meeting Time (Time)">
+						<Input type="time" id="meetingTime" bind:value={formData.meetingTime} fullWidth />
+					</FormField>
+					<FormField id="month" label="Target Month (Month)">
+						<Input type="month" id="month" bind:value={formData.month} fullWidth />
+					</FormField>
+					<FormField id="week" label="Target Week (Week)">
+						<Input type="week" id="week" bind:value={formData.week} fullWidth />
+					</FormField>
+				</Form>
+			</div>
+		</section>
+
+		<!-- Section 4: Actions -->
 		<section class="card action-card">
 			<div class="flex flex-col gap-4">
 				<Checkbox
@@ -198,21 +284,6 @@
 		padding: 2rem;
 		font-family: var(--font-sans);
 		color: var(--text-primary);
-	}
-
-	.page-header {
-		margin-bottom: 2rem;
-	}
-
-	.page-header h1 {
-		font-size: 2rem;
-		font-weight: 700;
-		margin-bottom: 0.5rem;
-	}
-
-	.subtitle {
-		color: var(--text-secondary);
-		font-size: 1.1rem;
 	}
 
 	.content {
@@ -283,6 +354,7 @@
 		overflow-x: auto;
 	}
 
+	/* Utility-like classes used in snippet */
 	.flex {
 		display: flex;
 	}
@@ -303,5 +375,26 @@
 	}
 	.text-secondary {
 		color: var(--text-secondary);
+	}
+	.p-4 {
+		padding: 1rem;
+	}
+	.mt-4 {
+		margin-top: 1rem;
+	}
+	.border {
+		border: 1px solid;
+	}
+	.border-border-base {
+		border-color: var(--border-base);
+	}
+	.rounded {
+		border-radius: var(--radius-md, 0.375rem);
+	}
+	.bg-surface-alt {
+		background-color: var(--bg-surface-alt);
+	}
+	.transition-all {
+		transition: all 0.2s ease;
 	}
 </style>

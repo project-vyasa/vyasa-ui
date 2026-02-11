@@ -28,9 +28,10 @@
 	}: Props = $props();
 
 	let finalDescription = $derived(description || hint);
+	let hasFooter = $derived(!!error || !!finalDescription);
 </script>
 
-<div class="form-field {layout} align-{align} {className}">
+<div class="form-field {layout} align-{align} {className}" class:has-footer={hasFooter}>
 	{#if label}
 		<label for={id} class="label">
 			{label}
@@ -67,17 +68,25 @@
 	}
 
 	.form-field.horizontal.align-center {
-		align-items: center;
+		align-items: flex-start;
 	}
+	/* Top alignment + fixed padding for consistent alignment, immune to baseline quirks */
+	.form-field.horizontal.align-center .label {
+		padding-top: 0.55rem;
+		margin-bottom: 0;
+	}
+
 	.form-field.horizontal.align-start {
 		align-items: flex-start;
-		padding-top: 0.25rem; /* Optical alignment for inputs */
+		padding-top: 0;
+	}
+	.form-field.horizontal.align-start .label {
+		padding-top: 0.25rem; /* Optical alignment for top-aligned inputs */
 	}
 
 	.form-field.horizontal .label {
 		width: 150px; /* Fixed width for labels in horizontal mode, or flex-basis */
 		flex-shrink: 0;
-		margin-bottom: 0;
 		text-align: right; /* Optional: right align labels in horizontal forms */
 	}
 
@@ -93,7 +102,9 @@
 	.label {
 		display: block;
 		font-size: var(--text-sm);
-		font-weight: 500;
+		font-weight: 400;
+		-webkit-font-smoothing: antialiased;
+		-moz-osx-font-smoothing: grayscale;
 		color: var(--text-primary);
 		margin-bottom: 0.25rem;
 		line-height: normal;

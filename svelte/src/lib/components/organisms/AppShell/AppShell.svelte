@@ -63,7 +63,7 @@
 			return `0px 0px minmax(0, 1fr) 0px`;
 		}
 		// Default
-		return `${appBar ? '3rem' : '0px'} 
+		return `${appBar ? 'var(--app-bar-height)' : '0px'} 
 		${leftVisible && sidebarLeft ? `${leftWidth}px` : '0px'} 
 		minmax(0, 1fr) 
 		${rightVisible && sidebarRight ? `${rightWidth}px` : '0px'}`;
@@ -71,17 +71,17 @@
 
 	function getRowSizes(zone: string) {
 		if (zone === 'bottom') {
-			return `${header ? 'auto' : '0px'} 0px 0px minmax(0, 1fr) ${statusBar ? '1.5rem' : '0px'}`;
+			return `${header ? 'auto' : '0px'} 0px 0px minmax(0, 1fr) ${statusBar ? 'var(--status-bar-height)' : '0px'}`;
 		}
 		if (zone === 'content') {
-			return `${header ? 'auto' : '0px'} 0px minmax(0, 1fr) 0px ${statusBar ? '1.5rem' : '0px'}`;
+			return `${header ? 'auto' : '0px'} 0px minmax(0, 1fr) 0px ${statusBar ? 'var(--status-bar-height)' : '0px'}`;
 		}
 		// Default
 		return `${header ? 'auto' : '0px'} 
 		${topVisible && sidebarTop ? `${topHeight}px` : '0px'}
 		minmax(0, 1fr) 
 		${bottomVisible && panelBottom ? `${bottomHeight}px` : '0px'} 
-		${statusBar ? '1.5rem' : '0px'}`;
+		${statusBar ? 'var(--status-bar-height)' : '0px'}`;
 	}
 
 	const colSizes = $derived(getColSizes(maximizedZone));
@@ -228,6 +228,10 @@
 		overflow: hidden;
 		background-color: var(--bg-surface);
 		color: var(--text-primary);
+		/* Layout Constants */
+		--app-bar-height: 3rem;
+		--status-bar-height: 1.5rem;
+		--resizer-size: 4px;
 	}
 
 	/* Prevent iframe interference */
@@ -272,7 +276,7 @@
 		position: absolute;
 		top: 0;
 		bottom: 0;
-		width: 4px;
+		width: var(--resizer-size);
 		cursor: col-resize;
 		z-index: 10;
 		transition: background-color 0.2s;
@@ -284,7 +288,7 @@
 		position: absolute;
 		left: 0;
 		right: 0;
-		height: 4px;
+		height: var(--resizer-size);
 		cursor: row-resize;
 		z-index: 10;
 		transition: background-color 0.2s;

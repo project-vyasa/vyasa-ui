@@ -214,10 +214,11 @@
 		overflow: hidden;
 		border: 1px solid var(--border-base);
 		border-radius: var(--control-radius);
+		--sidebar-width: 250px;
 	}
 
 	.settings-sidebar {
-		width: 250px;
+		width: var(--sidebar-width);
 		background-color: var(--bg-surface-alt);
 		border-right: 1px solid var(--border-base);
 		display: flex;

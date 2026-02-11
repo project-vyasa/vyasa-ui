@@ -509,20 +509,11 @@
 		gap: 1rem;
 	}
 
-	.heading-1 {
-		font-size: var(--text-2xl);
-		font-weight: 700;
-	}
-
 	.heading-2 {
 		font-size: var(--text-xl);
 		font-weight: 600;
 		border-bottom: 1px solid var(--border-base);
 		padding-bottom: 0.5rem;
-	}
-
-	.description {
-		color: var(--text-secondary);
 	}
 
 	.row {
