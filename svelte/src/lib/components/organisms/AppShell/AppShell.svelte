@@ -248,6 +248,9 @@
 	}
 	.area-sidebar-left {
 		grid-area: sidebar-left;
+		min-height: 0;
+		display: flex;
+		flex-direction: column;
 	}
 	.area-top {
 		grid-area: top;
@@ -262,6 +265,9 @@
 	}
 	.area-sidebar-right {
 		grid-area: sidebar-right;
+		min-height: 0;
+		display: flex;
+		flex-direction: column;
 	}
 	.area-status {
 		grid-area: status;

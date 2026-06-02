@@ -38,6 +38,7 @@
 		display: flex;
 		flex-direction: column;
 		height: 100%;
+		min-height: 0;
 		background-color: var(--bg-surface);
 		border: 1px solid var(--border-base); /* Default border, can be overridden by className */
 	}
@@ -70,6 +71,7 @@
 
 	.panel-content {
 		flex: 1;
+		min-height: 0;
 		overflow: auto;
 		padding: 0;
 	}
