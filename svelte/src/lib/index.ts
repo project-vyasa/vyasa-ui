@@ -27,3 +27,7 @@ export { default as Toolbar } from './components/organisms/Toolbar/Toolbar.svelt
 export { default as Panel } from './components/organisms/Panel/Panel.svelte';
 export { default as Tabs, type TabItem } from './components/organisms/Tabs/Tabs.svelte';
 export { default as DataGrid } from './components/organisms/DataGrid/DataGrid.svelte';
+
+// Utils
+export { default as ThemeProvider } from './components/utils/ThemeProvider.svelte';
+export { default as ToastProvider } from './components/molecules/Toast/ToastProvider.svelte';
