@@ -170,7 +170,11 @@
 	];
 
 	import DemoToolbar from '$lib/components/organisms/DemoToolbar/DemoToolbar.svelte';
+	import SettingsModal from '$lib/components/organisms/SettingsModal/SettingsModal.svelte';
+	import Button from '$lib/components/atoms/Button/Button.svelte';
 	import { onDestroy } from 'svelte';
+
+	let isSettingsOpen = $state(false);
 
 	onDestroy(() => {
 		if (typeof document !== 'undefined') {
@@ -183,19 +187,19 @@
 
 <div class="h-screen flex flex-col">
 	<DemoToolbar title="Settings Panel Demo" backUrl="/" />
-	<!-- <div class="p-4 border-b border-border-base bg-surface-alt"> ... removed ... </div> -->
-	<div class="flex-1 flex overflow-hidden">
-		<!-- Settings Panel uses full height of parent -->
-		<div class="flex-[2] h-full border-r border-border-base">
-			<SettingsPanel {schema} bind:data={settings} class="h-full border-0 rounded-none" />
-		</div>
+	
+	<div class="flex-1 flex flex-col items-center justify-center p-8 bg-surface-elevated">
+		<Button variant="primary" onclick={() => isSettingsOpen = true}>
+			Open Settings Modal
+		</Button>
 
-		<!-- Live Data Preview -->
-		<div class="flex-1 p-4 bg-surface-elevated overflow-auto font-mono text-xs">
-			<h3 class="mb-2 font-semibold">Live Settings Object</h3>
+		<div class="mt-8 w-full max-w-2xl bg-surface p-4 border border-border-base rounded overflow-auto font-mono text-xs">
+			<h3 class="mb-2 font-semibold text-center">Live Settings Object</h3>
 			<pre class="whitespace-pre-wrap">{JSON.stringify(settings, null, 2)}</pre>
 		</div>
 	</div>
+
+	<SettingsModal bind:open={isSettingsOpen} {schema} bind:data={settings} />
 </div>
 
 <style>

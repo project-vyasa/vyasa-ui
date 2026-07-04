@@ -1,6 +1,9 @@
 <script lang="ts">
 	import { getContext } from 'svelte';
 	import AppShell from '$lib/components/organisms/AppShell/AppShell.svelte';
+	import AppHeader from '$lib/components/organisms/AppHeader/AppHeader.svelte';
+	import AppBar from '$lib/components/organisms/AppBar/AppBar.svelte';
+	import SettingsModal from '$lib/components/organisms/SettingsModal/SettingsModal.svelte';
 	import Tree, { type TreeNode } from '$lib/components/organisms/Tree/Tree.svelte';
 	import Tabs, { type TabItem } from '$lib/components/organisms/Tabs/Tabs.svelte';
 	import Panel from '$lib/components/organisms/Panel/Panel.svelte';
@@ -46,6 +49,23 @@
 	const themeContext = getContext<{ current: 'light' | 'dark' }>('theme');
 
 	let activeActivityId = $state('files');
+
+	// --- Settings Modal Data ---
+	let isSettingsOpen = $state(false);
+	let settingsSchema = [
+		{
+			id: 'general',
+			title: 'General',
+			items: [
+				{ id: 'autoSave', type: 'boolean', title: 'Auto Save', description: 'Automatically save files after editing' },
+				{ id: 'fontSize', type: 'number', title: 'Font Size', description: 'Editor font size in pixels' }
+			]
+		}
+	];
+	let settingsData = $state({
+		autoSave: true,
+		fontSize: 14
+	});
 
 	// --- File Content Data ---
 	let fileContentMap = $state<Record<string, string>>({
@@ -199,15 +219,7 @@ A modern IDE built with Svelte.
 	// ... (Other handlers) ...
 
 	// --- Handlers ---
-	function handleActivityClick(id: string) {
-		if (activeActivityId === id) {
-			// If already active, toggle visibility
-			leftVisible = !leftVisible;
-		} else {
-			activeActivityId = id;
-			leftVisible = true;
-		}
-	}
+	// Handled by AppBar component now
 </script>
 
 {#snippet codeEditorSnippet(filename: string)}
@@ -232,90 +244,27 @@ A modern IDE built with Svelte.
 {/snippet}
 
 {#snippet headerContent()}
-	<div class="header-container">
-		<div class="header-left">
-			<Button variant="ghost" size="icon" icon={Menu} />
-			<span class="app-title">Vyasa IDE</span>
-			<!-- Simplified Menu for Demo -->
-		</div>
-		<div class="header-center">
-			<div class="command-center">
-				<Icon icon={Search} size={14} class="text-tertiary" />
-				<span>project-vyasa</span>
-			</div>
-		</div>
-		<div class="header-right">
-			<!-- Panel Toggles -->
-			<!-- Panel Toggles -->
-			<Button
-				variant={leftVisible ? 'secondary' : 'ghost'}
-				size="icon"
-				icon={PanelLeft}
-				class={leftVisible ? 'active-t' : ''}
-				onclick={() => (leftVisible = !leftVisible)}
-				title="Toggle Left Sidebar"
-			/>
-			<Button
-				variant={bottomVisible ? 'secondary' : 'ghost'}
-				size="icon"
-				icon={PanelBottom}
-				class={bottomVisible ? 'active-t' : ''}
-				onclick={() => (bottomVisible = !bottomVisible)}
-				title="Toggle Bottom Panel"
-			/>
-			<Button
-				variant={rightVisible ? 'secondary' : 'ghost'}
-				size="icon"
-				icon={PanelRight}
-				class={rightVisible ? 'active-t' : ''}
-				onclick={() => (rightVisible = !rightVisible)}
-				title="Toggle Right Sidebar"
-			/>
-			<div class="divider-v"></div>
-			<Button
-				variant={topVisible ? 'secondary' : 'ghost'}
-				size="icon"
-				icon={PanelTop}
-				class={topVisible ? 'active-t' : ''}
-				onclick={() => (topVisible = !topVisible)}
-				title="Toggle Top Panel"
-			/>
-		</div>
-	</div>
+	<AppHeader
+		bind:leftVisible
+		bind:bottomVisible
+		bind:rightVisible
+	/>
 {/snippet}
 
 {#snippet appBarContent()}
-	<div class="app-bar">
-		<div class="app-item-wrapper {activeActivityId === 'files' && leftVisible ? 'active' : ''}">
-			<Button
-				variant="ghost"
-				size="icon"
-				icon={Files}
-				onclick={() => handleActivityClick('files')}
-				title="Explorer"
-			/>
-		</div>
-		<div class="app-item-wrapper {activeActivityId === 'search' && leftVisible ? 'active' : ''}">
-			<Button
-				variant="ghost"
-				size="icon"
-				icon={Search}
-				onclick={() => handleActivityClick('search')}
-				title="Search"
-			/>
-		</div>
-		<div class="app-item-wrapper {activeActivityId === 'git' && leftVisible ? 'active' : ''}">
-			<Button
-				variant="ghost"
-				size="icon"
-				icon={GitBranch}
-				onclick={() => handleActivityClick('git')}
-				title="Source Control"
-			/>
-		</div>
-		<div class="spacer"></div>
-		<Button variant="ghost" size="icon" icon={Settings} />
-	</div>
+	<AppBar
+		items={[
+			{ id: 'files', icon: Files, title: 'Explorer' },
+			{ id: 'search', icon: Search, title: 'Search' },
+			{ id: 'git', icon: GitBranch, title: 'Source Control' }
+		]}
+		bind:activeId={activeActivityId}
+		bind:expanded={leftVisible}
+	>
+		{#snippet bottom()}
+			<Button variant="ghost" size="icon" icon={Settings} onclick={() => isSettingsOpen = true} />
+		{/snippet}
+	</AppBar>
 {/snippet}
 
 {#snippet sidebarLeftContent()}
@@ -471,6 +420,8 @@ A modern IDE built with Svelte.
 	</Tabs>
 </AppShell>
 
+<SettingsModal bind:open={isSettingsOpen} schema={settingsSchema} bind:data={settingsData} />
+
 <style>
 	/* Code Editor Snippet */
 	.code-editor {
@@ -480,99 +431,8 @@ A modern IDE built with Svelte.
 		line-height: 1.5;
 	}
 
-	/* Header */
-	.header-container {
-		display: flex;
-		align-items: center;
-		padding: 0 0.5rem;
-		height: 100%;
-		gap: 1rem;
-		background-color: var(--bg-surface-alt);
-		font-size: var(--text-sm);
-	}
-	.header-left,
-	.header-center,
-	.header-right {
-		display: flex;
-		align-items: center;
-		gap: 0.5rem;
-	}
-	.header-center {
-		flex: 1;
-		justify-content: center;
-	}
-	/* Ensure header buttons are visible */
-	.header-right {
-		color: var(--text-primary);
-	}
-
-	.app-title {
-		font-weight: 600;
-		margin-right: 0.5rem;
-	}
-
-	.command-center {
-		display: flex;
-		align-items: center;
-		gap: 0.5rem;
-		background-color: var(--bg-surface);
-		border: 1px solid var(--border-base);
-		border-radius: 4px;
-		padding: 0.125rem 0.5rem;
-		width: 20rem;
-		color: var(--text-secondary);
-	}
-	:global(.active-t) {
-		background-color: var(--action-primary);
-		color: var(--action-text);
-	}
-	:global(.text-tertiary) {
-		color: var(--text-tertiary);
-	}
-
 	/* Top Bar */
 	.top-bar-content {
-		padding: 0.5rem;
-		height: 100%;
-		font-size: var(--text-sm);
-	}
-	.breadcrumb {
-		display: flex;
-		align-items: center;
-		gap: 0.25rem;
-		color: var(--text-secondary);
-	}
-
-	/* App Bar (renamed from Activity Bar) */
-	.app-bar {
-		display: flex;
-		flex-direction: column;
-		align-items: center;
-		padding: 0.5rem 0;
-		gap: 0.5rem;
-		height: 100%;
-		width: 3rem;
-	}
-	/* Active state for App Bar items - Visual Cue */
-	.app-item-wrapper {
-		display: flex;
-		align-items: center;
-		justify-content: center;
-		width: 100%;
-		border-left: 2px solid transparent;
-	}
-	.app-item-wrapper.active {
-		background-color: var(--bg-surface);
-		border-left-color: var(--action-primary);
-		color: var(--action-primary);
-	}
-	/* Ensure icon inside inherits color */
-	.app-item-wrapper.active :global(.icon) {
-		color: var(--action-primary);
-	}
-
-	/* Sidebar Left */
-	:global(.action-icon) {
 		height: 1.5rem;
 		width: 1.5rem;
 	}

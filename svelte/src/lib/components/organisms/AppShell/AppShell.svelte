@@ -229,8 +229,8 @@
 		background-color: var(--bg-surface);
 		color: var(--text-primary);
 		/* Layout Constants */
-		--app-bar-height: 3rem;
-		--status-bar-height: 1.5rem;
+		--app-bar-height: calc(3rem * var(--density, 1));
+		--status-bar-height: calc(1.5rem * var(--density, 1));
 		--resizer-size: 4px;
 	}
 

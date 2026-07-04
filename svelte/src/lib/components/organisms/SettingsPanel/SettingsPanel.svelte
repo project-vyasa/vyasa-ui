@@ -54,53 +54,11 @@
 
 	// Scroll Spy
 	$effect(() => {
+		// Dependency on filteredSchema to re-run when sections change
+		filteredSchema; 
+		
 		if (typeof IntersectionObserver === 'undefined' || !contentContainer) return;
 
-		const options = {
-			root: contentContainer,
-			threshold: 0.1,
-			rootMargin: '-5% 0px -80% 0px' // Bias towards top
-		};
-
-		observer = new IntersectionObserver((entries) => {
-			if (isScrollingFromClick) return;
-
-			// Find valid intersecting entry with highest intersection ratio
-			// But since we want "scroll spy" logic, usually the first visible one is good.
-			entries.forEach((entry) => {
-				if (entry.isIntersecting) {
-					const id = entry.target.getAttribute('data-section-id');
-					if (id) activeSectionId = id;
-				}
-			});
-		}, options);
-
-		const sections = contentContainer.querySelectorAll('.settings-section-block');
-		sections.forEach((s) => observer.observe(s));
-
-		return () => observer.disconnect();
-	});
-
-	// Re-run observer when filtered schema changes
-	$effect(() => {
-		// Triggered by schema change, wait for DOM update
-		if (filteredSchema && observer && contentContainer) {
-			// Small timeout to allow DOM to settle? Svelte types might not need it if reactivity works right.
-			// Actually, the previous effect handles setup/teardown if dep changes.
-			// But we need to re-observe if DOM nodes changed.
-			// The simple way is to destroy and recreate observer.
-			// Let's rely on the block above reacting to DOM changes or we simply re-select.
-			// The above effect has no explicit dependency on filteredSchema, so it runs once.
-			// We need it to run when list changes.
-		}
-	});
-
-	// We can make the observer setup effect depend on filteredSchema length to re-run
-	$effect(() => {
-		filteredSchema; // dependency
-		if (!contentContainer) return;
-
-		// Cleanup old
 		if (observer) observer.disconnect();
 
 		const options = {
@@ -119,13 +77,16 @@
 			}
 		}, options);
 
-		// Tick/Timeout ensures DOM is ready
-		setTimeout(() => {
+		// Allow DOM to settle before observing
+		const timeoutId = setTimeout(() => {
 			const sections = contentContainer.querySelectorAll('.settings-section-block');
 			sections.forEach((s) => observer.observe(s));
 		}, 0);
 
-		return () => observer && observer.disconnect();
+		return () => {
+			clearTimeout(timeoutId);
+			if (observer) observer.disconnect();
+		};
 	});
 
 	function scrollToSection(id: string) {
@@ -207,6 +168,7 @@
 <style>
 	.settings-panel {
 		display: flex;
+		width: 100%;
 		height: 100%;
 		background-color: var(--bg-surface);
 		color: var(--text-primary);

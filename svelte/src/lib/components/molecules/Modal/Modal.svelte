@@ -2,7 +2,7 @@
 	interface Props {
 		open?: boolean;
 		title?: string;
-		size?: 'sm' | 'md' | 'lg';
+		size?: 'sm' | 'md' | 'lg' | 'xl';
 		body: import('svelte').Snippet;
 		footer?: import('svelte').Snippet;
 		onClose?: () => void;
@@ -100,6 +100,9 @@
 	}
 	.modal-container.lg {
 		max-width: 48rem;
+	}
+	.modal-container.xl {
+		max-width: 64rem;
 	}
 
 	.modal-header {
