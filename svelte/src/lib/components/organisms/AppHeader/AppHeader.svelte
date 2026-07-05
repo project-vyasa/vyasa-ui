@@ -2,9 +2,6 @@
 	import Button from '$lib/components/atoms/Button/Button.svelte';
 	import Icon from '$lib/components/atoms/Icon/Icon.svelte';
 	import { 
-		Sun, 
-		Moon, 
-		Monitor, 
 		Search 
 	} from 'lucide-svelte';
 	import { getContext } from 'svelte';
@@ -41,20 +38,6 @@
 
 	<div class="header-right">
 		{#if themeCtx}
-			<Button
-				variant="ghost"
-				size="icon"
-				icon={Monitor}
-				onclick={() => themeCtx.cycleDensity()}
-				title="Toggle Density"
-			/>
-			<Button
-				variant="ghost"
-				size="icon"
-				icon={themeCtx.theme === 'dark' ? Moon : Sun}
-				onclick={() => themeCtx.toggleTheme()}
-				title="Toggle Theme"
-			/>
 			<div class="divider-v"></div>
 		{/if}
 

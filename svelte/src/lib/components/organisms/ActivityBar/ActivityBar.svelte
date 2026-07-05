@@ -99,7 +99,6 @@
 	.activity-item-wrapper.active :global(.icon),
 	.activity-item-wrapper.active :global(svg) {
 		color: var(--text-primary);
-		fill: var(--text-primary); /* For VS Code filled effect if applicable */
 	}
 
 	:global(.activity-bar .btn) {

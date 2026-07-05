@@ -34,7 +34,10 @@
 		Layout,
 		X,
 		Plus,
-		Settings
+		Settings,
+		Sun,
+		Moon,
+		Monitor
 	} from 'lucide-svelte';
 
 	// --- State ---
@@ -46,7 +49,11 @@
 	let maximizedZone = $state<'none' | 'bottom' | 'content'>('none'); // [REFACTOR]
 
 	// --- Context ---
-	const themeContext = getContext<{ current: 'light' | 'dark' }>('theme');
+	const themeContext = getContext<{ 
+		current: 'light' | 'dark',
+		theme: 'light' | 'dark' | 'system',
+		density: 'compact' | 'standard' | 'comfortable'
+	}>('theme');
 
 	let activeActivityId = $state('files');
 
@@ -56,15 +63,61 @@
 		{
 			id: 'general',
 			title: 'General',
-			items: [
-				{ id: 'autoSave', type: 'boolean', title: 'Auto Save', description: 'Automatically save files after editing' },
-				{ id: 'fontSize', type: 'number', title: 'Font Size', description: 'Editor font size in pixels' }
+			groups: [
+				{
+					items: [
+						{ id: 'autoSave', type: 'boolean', label: 'Auto Save', description: 'Automatically save files after editing' },
+						{ id: 'fontSize', type: 'number', label: 'Font Size', description: 'Editor font size in pixels' }
+					]
+				}
+			]
+		},
+		{
+			id: 'appearance',
+			title: 'Appearance',
+			groups: [
+				{
+					items: [
+						{ 
+							id: 'theme', 
+							type: 'select', 
+							label: 'Theme', 
+							description: 'Application color theme',
+							options: [
+								{label: 'Light', value: 'light'}, 
+								{label: 'Dark', value: 'dark'},
+								{label: 'System Default', value: 'system'}
+							] 
+						},
+						{ 
+							id: 'density', 
+							type: 'select', 
+							label: 'Density', 
+							description: 'Spacing and sizing of UI elements',
+							options: [
+								{label: 'Compact', value: 'compact'}, 
+								{label: 'Standard', value: 'standard'}, 
+								{label: 'Comfortable', value: 'comfortable'}
+							] 
+						}
+					]
+				}
 			]
 		}
 	];
 	let settingsData = $state({
 		autoSave: true,
-		fontSize: 14
+		fontSize: 14,
+		theme: themeContext?.theme || 'system',
+		density: themeContext?.density || 'standard'
+	});
+
+	// Sync settingsData with themeContext
+	$effect(() => {
+		if (themeContext) {
+			themeContext.theme = settingsData.theme as 'light' | 'dark' | 'system';
+			themeContext.density = settingsData.density as 'compact' | 'standard' | 'comfortable';
+		}
 	});
 
 	// --- File Content Data ---
@@ -262,6 +315,22 @@ A modern IDE built with Svelte.
 		bind:expanded={leftVisible}
 	>
 		{#snippet bottom()}
+			{#if themeContext}
+				<Button
+					variant="ghost"
+					size="icon"
+					icon={Monitor}
+					onclick={() => themeContext.cycleDensity()}
+					title="Toggle Density"
+				/>
+				<Button
+					variant="ghost"
+					size="icon"
+					icon={themeContext.current === 'dark' ? Moon : Sun}
+					onclick={() => themeContext.toggleTheme()}
+					title="Toggle Theme"
+				/>
+			{/if}
 			<Button variant="ghost" size="icon" icon={Settings} onclick={() => isSettingsOpen = true} />
 		{/snippet}
 	</ActivityBar>
