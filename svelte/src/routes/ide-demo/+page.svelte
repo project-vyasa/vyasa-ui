@@ -2,7 +2,7 @@
 	import { getContext } from 'svelte';
 	import AppShell from '$lib/components/organisms/AppShell/AppShell.svelte';
 	import AppHeader from '$lib/components/organisms/AppHeader/AppHeader.svelte';
-	import AppBar from '$lib/components/organisms/AppBar/AppBar.svelte';
+	import ActivityBar from '$lib/components/organisms/ActivityBar/ActivityBar.svelte';
 	import SettingsModal from '$lib/components/organisms/SettingsModal/SettingsModal.svelte';
 	import Tree, { type TreeNode } from '$lib/components/organisms/Tree/Tree.svelte';
 	import Tabs, { type TabItem } from '$lib/components/organisms/Tabs/Tabs.svelte';
@@ -219,7 +219,7 @@ A modern IDE built with Svelte.
 	// ... (Other handlers) ...
 
 	// --- Handlers ---
-	// Handled by AppBar component now
+	// Handled by ActivityBar component now
 </script>
 
 {#snippet codeEditorSnippet(filename: string)}
@@ -252,7 +252,7 @@ A modern IDE built with Svelte.
 {/snippet}
 
 {#snippet appBarContent()}
-	<AppBar
+	<ActivityBar
 		items={[
 			{ id: 'files', icon: Files, title: 'Explorer' },
 			{ id: 'search', icon: Search, title: 'Search' },
@@ -264,7 +264,7 @@ A modern IDE built with Svelte.
 		{#snippet bottom()}
 			<Button variant="ghost" size="icon" icon={Settings} onclick={() => isSettingsOpen = true} />
 		{/snippet}
-	</AppBar>
+	</ActivityBar>
 {/snippet}
 
 {#snippet sidebarLeftContent()}

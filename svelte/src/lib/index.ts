@@ -23,7 +23,7 @@ export { default as Tooltip } from './components/molecules/Tooltip/Tooltip.svelt
 // Organisms
 export { default as AppShell } from './components/organisms/AppShell/AppShell.svelte';
 export { default as AppHeader } from './components/organisms/AppHeader/AppHeader.svelte';
-export { default as AppBar } from './components/organisms/AppBar/AppBar.svelte';
+export { default as ActivityBar } from './components/organisms/ActivityBar/ActivityBar.svelte';
 export { default as Tree, type TreeNode } from './components/organisms/Tree/Tree.svelte';
 export { default as Toolbar } from './components/organisms/Toolbar/Toolbar.svelte';
 export { default as Panel } from './components/organisms/Panel/Panel.svelte';

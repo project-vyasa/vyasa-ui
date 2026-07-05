@@ -2,14 +2,14 @@
 	import type { Snippet, Component } from 'svelte';
 	import Button from '$lib/components/atoms/Button/Button.svelte';
 
-	export interface AppBarItem {
+	export interface ActivityBarItem {
 		id: string;
 		icon: Component<any>;
 		title?: string;
 	}
 
 	interface Props {
-		items?: AppBarItem[];
+		items?: ActivityBarItem[];
 		activeId?: string;
 		expanded?: boolean;
 
@@ -37,16 +37,17 @@
 	}
 </script>
 
-<div class="app-bar">
-	<div class="app-bar-group">
+<div class="activity-bar">
+	<div class="activity-bar-group">
 		{#if top}
 			{@render top?.()}
 		{/if}
 		{#each items as item}
-			<div class="app-item-wrapper {activeId === item.id && expanded ? 'active' : ''}">
+			<div class="activity-item-wrapper {activeId === item.id && expanded ? 'active' : ''}">
 				<Button
 					variant="ghost"
 					size="icon"
+					class={['activity-item', activeId === item.id ? 'active' : '']}
 					icon={item.icon}
 					onclick={() => handleItemClick(item.id)}
 					title={item.title}
@@ -58,14 +59,14 @@
 		{/if}
 	</div>
 	{#if bottom}
-		<div class="app-bar-group">
+		<div class="activity-bar-group">
 			{@render bottom?.()}
 		</div>
 	{/if}
 </div>
 
 <style>
-	.app-bar {
+	.activity-bar {
 		display: flex;
 		flex-direction: column;
 		align-items: center;
@@ -75,14 +76,14 @@
 		height: 100%;
 		background-color: var(--bg-surface);
 	}
-	.app-bar-group {
+	.activity-bar-group {
 		display: flex;
 		flex-direction: column;
 		align-items: center;
 		gap: var(--space-2);
 		width: 100%;
 	}
-	.app-item-wrapper {
+	.activity-item-wrapper {
 		display: flex;
 		align-items: center;
 		justify-content: center;
@@ -90,12 +91,23 @@
 		border-left: 2px solid transparent;
 		padding: var(--space-1) 0;
 	}
-	.app-item-wrapper.active {
-		background-color: var(--bg-surface-elevated);
+	.activity-item-wrapper.active {
+		background-color: transparent;
 		border-left-color: var(--action-primary);
-		color: var(--action-primary);
+		color: var(--text-primary);
 	}
-	.app-item-wrapper.active :global(.icon) {
-		color: var(--action-primary);
+	.activity-item-wrapper.active :global(.icon),
+	.activity-item-wrapper.active :global(svg) {
+		color: var(--text-primary);
+		fill: var(--text-primary); /* For VS Code filled effect if applicable */
+	}
+
+	:global(.activity-bar .btn) {
+		border-radius: 0;
+		color: var(--text-secondary);
+	}
+
+	:global(.activity-bar .btn:hover) {
+		color: var(--text-primary);
 	}
 </style>

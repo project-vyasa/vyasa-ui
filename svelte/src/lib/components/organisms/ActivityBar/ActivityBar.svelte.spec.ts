@@ -1,12 +1,12 @@
 import { describe, expect, it } from 'vitest';
 import { render } from 'vitest-browser-svelte';
-import AppBar from './AppBar.svelte';
+import ActivityBar from './ActivityBar.svelte';
 import { createRawSnippet } from 'svelte';
 import { Files, Search } from 'lucide-svelte';
 
-describe('AppBar.svelte', () => {
+describe('ActivityBar.svelte', () => {
 	it('should render items correctly', async () => {
-		const { getByTitle } = render(AppBar, {
+		const { getByTitle } = render(ActivityBar, {
 			items: [
 				{ id: 'files', icon: Files, title: 'Explorer' },
 				{ id: 'search', icon: Search, title: 'Search' }
@@ -18,7 +18,7 @@ describe('AppBar.svelte', () => {
 	});
 
 	it('should render children when provided', async () => {
-		const { getByText } = render(AppBar, {
+		const { getByText } = render(ActivityBar, {
 			children: createRawSnippet(() => ({
 				render: () => '<div>Test Content</div>'
 			}))
@@ -28,7 +28,7 @@ describe('AppBar.svelte', () => {
 	});
 
 	it('should render top and bottom slots when provided', async () => {
-		const { getByText } = render(AppBar, {
+		const { getByText } = render(ActivityBar, {
 			top: createRawSnippet(() => ({
 				render: () => '<div>Top Content</div>'
 			})),

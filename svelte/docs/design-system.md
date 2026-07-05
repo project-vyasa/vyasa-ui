@@ -76,7 +76,7 @@ Complex UI sections.
 - `Modal`, `Drawer`
 - `DatePicker`
 - `SettingsPanel`: Preference management interface (like VSCode).
-- `AppShell`: Main application layout (AppBar, Sidebars, Content).
+- `AppShell`: Main application layout (ActivityBar, Sidebars, Content).
 
 ## 4. Iconography
 - **Source**: Lucide Icons.
