@@ -55,8 +55,8 @@
 	// Scroll Spy
 	$effect(() => {
 		// Dependency on filteredSchema to re-run when sections change
-		filteredSchema; 
-		
+		filteredSchema;
+
 		if (typeof IntersectionObserver === 'undefined' || !contentContainer) return;
 
 		if (observer) observer.disconnect();

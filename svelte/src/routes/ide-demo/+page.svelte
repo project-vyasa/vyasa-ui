@@ -4,6 +4,7 @@
 	import AppHeader from '$lib/components/organisms/AppHeader/AppHeader.svelte';
 	import ActivityBar from '$lib/components/organisms/ActivityBar/ActivityBar.svelte';
 	import SettingsModal from '$lib/components/organisms/SettingsModal/SettingsModal.svelte';
+	import ListView from '$lib/components/organisms/ListView/ListView.svelte';
 	import Tree, { type TreeNode } from '$lib/components/organisms/Tree/Tree.svelte';
 	import Tabs, { type TabItem } from '$lib/components/organisms/Tabs/Tabs.svelte';
 	import Panel from '$lib/components/organisms/Panel/Panel.svelte';
@@ -16,12 +17,7 @@
 		FileCode,
 		FileJson,
 		FileText,
-		Menu,
 		Search,
-		PanelLeft,
-		PanelBottom,
-		PanelRight,
-		PanelTop,
 		Files,
 		GitBranch,
 		MoreHorizontal,
@@ -33,11 +29,11 @@
 		Maximize2,
 		Layout,
 		X,
-		Plus,
 		Settings,
 		Sun,
 		Moon,
-		Monitor
+		Monitor,
+		BookOpen
 	} from 'lucide-svelte';
 
 	// --- State ---
@@ -49,10 +45,10 @@
 	let maximizedZone = $state<'none' | 'bottom' | 'content'>('none'); // [REFACTOR]
 
 	// --- Context ---
-	const themeContext = getContext<{ 
-		current: 'light' | 'dark',
-		theme: 'light' | 'dark' | 'system',
-		density: 'compact' | 'standard' | 'comfortable'
+	const themeContext = getContext<{
+		current: 'light' | 'dark';
+		theme: 'light' | 'dark' | 'system';
+		density: 'compact' | 'standard' | 'comfortable';
 	}>('theme');
 
 	let activeActivityId = $state('files');
@@ -66,8 +62,18 @@
 			groups: [
 				{
 					items: [
-						{ id: 'autoSave', type: 'boolean', label: 'Auto Save', description: 'Automatically save files after editing' },
-						{ id: 'fontSize', type: 'number', label: 'Font Size', description: 'Editor font size in pixels' }
+						{
+							id: 'autoSave',
+							type: 'boolean',
+							label: 'Auto Save',
+							description: 'Automatically save files after editing'
+						},
+						{
+							id: 'fontSize',
+							type: 'number',
+							label: 'Font Size',
+							description: 'Editor font size in pixels'
+						}
 					]
 				}
 			]
@@ -78,27 +84,27 @@
 			groups: [
 				{
 					items: [
-						{ 
-							id: 'theme', 
-							type: 'select', 
-							label: 'Theme', 
+						{
+							id: 'theme',
+							type: 'select',
+							label: 'Theme',
 							description: 'Application color theme',
 							options: [
-								{label: 'Light', value: 'light'}, 
-								{label: 'Dark', value: 'dark'},
-								{label: 'System Default', value: 'system'}
-							] 
+								{ label: 'Light', value: 'light' },
+								{ label: 'Dark', value: 'dark' },
+								{ label: 'System Default', value: 'system' }
+							]
 						},
-						{ 
-							id: 'density', 
-							type: 'select', 
-							label: 'Density', 
+						{
+							id: 'density',
+							type: 'select',
+							label: 'Density',
 							description: 'Spacing and sizing of UI elements',
 							options: [
-								{label: 'Compact', value: 'compact'}, 
-								{label: 'Standard', value: 'standard'}, 
-								{label: 'Comfortable', value: 'comfortable'}
-							] 
+								{ label: 'Compact', value: 'compact' },
+								{ label: 'Standard', value: 'standard' },
+								{ label: 'Comfortable', value: 'comfortable' }
+							]
 						}
 					]
 				}
@@ -111,6 +117,32 @@
 		theme: themeContext?.theme || 'system',
 		density: themeContext?.density || 'standard'
 	});
+
+	// --- ListView Demo Data ---
+	let selectedDemoBookIds = $state(new Set<string | number>(['bg']));
+	const demoBooks = [
+		{
+			id: 'bg',
+			title: 'Bhagavad Gita',
+			chapters: '18 Chapters',
+			description: '700 verses with commentaries',
+			status: 'Curated'
+		},
+		{
+			id: 'yv',
+			title: 'Yoga Vasistha',
+			chapters: '6 Books',
+			description: 'Mula text and IAST commentaries',
+			status: 'Draft'
+		},
+		{
+			id: 'upanishads',
+			title: 'Upanishads',
+			chapters: '108 Upanishads',
+			description: 'Principal texts of Vedanta philosophy',
+			status: 'Planned'
+		}
+	];
 
 	// Sync settingsData with themeContext
 	$effect(() => {
@@ -136,7 +168,7 @@
 </html>`,
 		'page.svelte': `<script>
 	let count = 0;
-<\/script>
+${'</s' + 'cript>'}
 
 <h1>Welcome to Vyasa</h1>
 <button on:click={() => count++}>
@@ -297,17 +329,14 @@ A modern IDE built with Svelte.
 {/snippet}
 
 {#snippet headerContent()}
-	<AppHeader
-		bind:leftVisible
-		bind:bottomVisible
-		bind:rightVisible
-	/>
+	<AppHeader bind:leftVisible bind:bottomVisible bind:rightVisible />
 {/snippet}
 
 {#snippet appBarContent()}
 	<ActivityBar
 		items={[
 			{ id: 'files', icon: Files, title: 'Explorer' },
+			{ id: 'books', icon: BookOpen, title: 'Publications' },
 			{ id: 'search', icon: Search, title: 'Search' },
 			{ id: 'git', icon: GitBranch, title: 'Source Control' }
 		]}
@@ -331,7 +360,7 @@ A modern IDE built with Svelte.
 					title="Toggle Theme"
 				/>
 			{/if}
-			<Button variant="ghost" size="icon" icon={Settings} onclick={() => isSettingsOpen = true} />
+			<Button variant="ghost" size="icon" icon={Settings} onclick={() => (isSettingsOpen = true)} />
 		{/snippet}
 	</ActivityBar>
 {/snippet}
@@ -348,6 +377,21 @@ A modern IDE built with Svelte.
 					bind:expandedIds
 					selectedId={selectedFileId}
 					onSelect={handleFileSelect}
+				/>
+			</div>
+		</Panel>
+	{:else if activeActivityId === 'books'}
+		<Panel title="Publications" icon={BookOpen}>
+			<div class="p-2 h-full" style="display: flex; flex-direction: column;">
+				<ListView
+					items={demoBooks}
+					selectable={true}
+					bind:selectedIds={selectedDemoBookIds}
+					titleField="title"
+					subtitleField="chapters"
+					descriptionField="description"
+					metaField="status"
+					class="border-0"
 				/>
 			</div>
 		</Panel>

@@ -31,6 +31,7 @@ export { default as Tabs, type TabItem } from './components/organisms/Tabs/Tabs.
 export { default as DataGrid } from './components/organisms/DataGrid/DataGrid.svelte';
 export { default as SettingsPanel } from './components/organisms/SettingsPanel/SettingsPanel.svelte';
 export { default as SettingsModal } from './components/organisms/SettingsModal/SettingsModal.svelte';
+export { default as ListView } from './components/organisms/ListView/ListView.svelte';
 
 // Utils
 export { default as ThemeProvider } from './components/utils/ThemeProvider.svelte';

@@ -182,7 +182,9 @@
 	.btn :global(svg) {
 		width: calc(1.15rem * var(--density));
 		height: calc(1.15rem * var(--density));
-		transition: width 0.2s, height 0.2s;
+		transition:
+			width 0.2s,
+			height 0.2s;
 	}
 
 	@keyframes spin {

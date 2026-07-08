@@ -1,41 +1,41 @@
 import type { Component, ComponentType } from 'svelte';
 
 export type SettingType =
-    | 'text'
-    | 'number'
-    | 'boolean'
-    | 'color'
-    | 'select'
-    | 'font'
-    | 'date'
-    | 'time'
-    | 'email'
-    | 'url'
-    | 'password';
+	| 'text'
+	| 'number'
+	| 'boolean'
+	| 'color'
+	| 'select'
+	| 'font'
+	| 'date'
+	| 'time'
+	| 'email'
+	| 'url'
+	| 'password';
 
 export interface SettingItem {
-    id: string; // Key in the data object (can be nested path like 'editor.fontSize')
-    label: string;
-    description?: string;
-    type: SettingType;
-    options?: { label: string; value: any }[]; // For 'select' type
-    min?: number; // For 'number'
-    max?: number; // For 'number'
-    step?: number; // For 'number'
-    defaultValue?: any;
-    placeholder?: string;
-    colSpan?: number; // For grid layout (1-4)
+	id: string; // Key in the data object (can be nested path like 'editor.fontSize')
+	label: string;
+	description?: string;
+	type: SettingType;
+	options?: { label: string; value: any }[]; // For 'select' type
+	min?: number; // For 'number'
+	max?: number; // For 'number'
+	step?: number; // For 'number'
+	defaultValue?: any;
+	placeholder?: string;
+	colSpan?: number; // For grid layout (1-4)
 }
 
 export interface SettingGroup {
-    title?: string;
-    items: SettingItem[];
-    columns?: 1 | 2 | 3 | 4;
+	title?: string;
+	items: SettingItem[];
+	columns?: 1 | 2 | 3 | 4;
 }
 
 export interface SettingSection {
-    id: string;
-    title: string;
-    icon?: Component | ComponentType; // Lucide icon
-    groups: SettingGroup[];
+	id: string;
+	title: string;
+	icon?: Component | ComponentType; // Lucide icon
+	groups: SettingGroup[];
 }

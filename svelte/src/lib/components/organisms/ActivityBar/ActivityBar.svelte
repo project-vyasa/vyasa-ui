@@ -18,13 +18,13 @@
 		bottom?: Snippet;
 	}
 
-	let { 
-		items = [], 
-		activeId = $bindable(''), 
+	let {
+		items = [],
+		activeId = $bindable(''),
 		expanded = $bindable(false),
-		children, 
-		top, 
-		bottom 
+		children,
+		top,
+		bottom
 	}: Props = $props();
 
 	function handleItemClick(id: string) {

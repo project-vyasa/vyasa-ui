@@ -187,13 +187,13 @@
 
 <div class="h-screen flex flex-col">
 	<DemoToolbar title="Settings Panel Demo" backUrl="/" />
-	
-	<div class="flex-1 flex flex-col items-center justify-center p-8 bg-surface-elevated">
-		<Button variant="primary" onclick={() => isSettingsOpen = true}>
-			Open Settings Modal
-		</Button>
 
-		<div class="mt-8 w-full max-w-2xl bg-surface p-4 border border-border-base rounded overflow-auto font-mono text-xs">
+	<div class="flex-1 flex flex-col items-center justify-center p-8 bg-surface-elevated">
+		<Button variant="primary" onclick={() => (isSettingsOpen = true)}>Open Settings Modal</Button>
+
+		<div
+			class="mt-8 w-full max-w-2xl bg-surface p-4 border border-border-base rounded overflow-auto font-mono text-xs"
+		>
 			<h3 class="mb-2 font-semibold text-center">Live Settings Object</h3>
 			<pre class="whitespace-pre-wrap">{JSON.stringify(settings, null, 2)}</pre>
 		</div>

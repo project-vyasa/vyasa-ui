@@ -18,6 +18,7 @@
 	import Switch from '$lib/components/atoms/Switch/Switch.svelte';
 	import Textarea from '$lib/components/atoms/Textarea/Textarea.svelte';
 	import Select from '$lib/components/molecules/Select/Select.svelte';
+	import ListView from '$lib/components/organisms/ListView/ListView.svelte';
 	import Alert from '$lib/components/molecules/Alert/Alert.svelte';
 	import { toast } from '$lib/stores/toast.svelte.js'; // No component import needed here, provider wraps app
 	import Breadcrumbs from '$lib/components/molecules/Breadcrumbs/Breadcrumbs.svelte';
@@ -31,7 +32,6 @@
 		Folder,
 		FileCode,
 		Search,
-		Maximize2,
 		Sun,
 		Moon,
 		Edit,
@@ -56,10 +56,6 @@
 		Files,
 		Plus
 	} from 'lucide-svelte';
-	import { getContext } from 'svelte';
-
-	// Theme Context
-	const themeCtx = getContext<any>('theme');
 
 	let inputValue = $state('');
 	let errorValue = $state('Invalid');
@@ -130,6 +126,53 @@
 	];
 	let selectVal1 = $state('');
 	let selectVal2 = $state(['svelte', 'vue']);
+
+	// --- ListView Demo Data ---
+	interface ListViewItem {
+		id: string;
+		title: string;
+		subtitle: string;
+		description: string;
+		meta: string;
+		unread: boolean;
+		category: string;
+	}
+
+	const listViewData: ListViewItem[] = [
+		{
+			id: 'item-1',
+			title: 'Yoga Vasistha',
+			subtitle: 'Mula Stream Curated',
+			description:
+				'This chapter details the conversation between Rama and Vasistha regarding liberation.',
+			meta: 'Chapter 1',
+			unread: true,
+			category: 'Scripture'
+		},
+		{
+			id: 'item-2',
+			title: 'Bhagavad Gita',
+			subtitle: 'Verses & PURPORT',
+			description:
+				'The conversation on the battlefield of Kurukshetra containing 700 verses across 18 chapters.',
+			meta: 'Chapter 2',
+			unread: false,
+			category: 'Scripture'
+		},
+		{
+			id: 'item-3',
+			title: 'Svetasvatara Upanishad',
+			subtitle: 'Commentary by Shankara',
+			description:
+				'A study of the origin of all things, covering the cosmic self and absolute reality.',
+			meta: 'Upanishad',
+			unread: false,
+			category: 'Philosophy'
+		}
+	];
+
+	let selectedListViewId = $state<string | number>('item-1');
+	let selectedListViewIds = $state(new Set<string | number>(['item-2']));
 	import DemoToolbar from '$lib/components/organisms/DemoToolbar/DemoToolbar.svelte';
 	// ... (other imports)
 </script>
@@ -366,6 +409,55 @@
 			/>
 			<div style="margin-top: 1rem;" class="text-sm text-secondary">
 				Selected IDs: {Array.from(selectedGridIds).join(', ') || 'None'}
+			</div>
+		</div>
+	</section>
+
+	<section class="section">
+		<h2 class="heading-2">ListView</h2>
+		<div class="row">
+			<div
+				class="col"
+				style="flex: 1; min-width: 300px; display: flex; flex-direction: column; gap: 1rem;"
+			>
+				<h3 class="font-bold mb-2">Single-Select Mode (Standard)</h3>
+				<div style="height: 350px;">
+					<ListView
+						items={listViewData}
+						bind:selectedId={selectedListViewId}
+						titleField="title"
+						subtitleField="subtitle"
+						descriptionField="description"
+						metaField="meta"
+						unreadField="unread"
+					/>
+				</div>
+				<div class="text-sm text-secondary">
+					Selected ID: {selectedListViewId || 'None'}
+				</div>
+			</div>
+
+			<div
+				class="col"
+				style="flex: 1; min-width: 300px; display: flex; flex-direction: column; gap: 1rem;"
+			>
+				<h3 class="font-bold mb-2">Multi-Select Mode (With Grouping)</h3>
+				<div style="height: 350px;">
+					<ListView
+						items={listViewData}
+						selectable
+						bind:selectedIds={selectedListViewIds}
+						groupBy="category"
+						titleField="title"
+						subtitleField="subtitle"
+						descriptionField="description"
+						metaField="meta"
+						unreadField="unread"
+					/>
+				</div>
+				<div class="text-sm text-secondary">
+					Selected IDs: {Array.from(selectedListViewIds).join(', ') || 'None'}
+				</div>
 			</div>
 		</div>
 	</section>

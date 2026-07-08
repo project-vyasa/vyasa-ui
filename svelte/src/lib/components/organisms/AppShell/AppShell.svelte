@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { onMount, type Snippet } from 'svelte';
+	import { onMount, setContext, type Snippet } from 'svelte';
 
 	interface Props {
 		children: Snippet;
@@ -44,6 +44,19 @@
 		bottomHeight = $bindable(192),
 		topHeight = $bindable(200)
 	}: Props = $props();
+
+	// --- Context for Header ---
+	setContext('appShell', {
+		get hasLeft() {
+			return !!sidebarLeft;
+		},
+		get hasRight() {
+			return !!sidebarRight;
+		},
+		get hasBottom() {
+			return !!panelBottom;
+		}
+	});
 
 	// --- Grid Template ---
 	const gridTemplate = $derived(`
