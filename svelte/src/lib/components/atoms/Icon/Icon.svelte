@@ -9,13 +9,7 @@
 		[key: string]: any;
 	}
 
-	let {
-		icon,
-		size = 16,
-		strokeWidth = 2,
-		class: className,
-		...rest
-	}: Props = $props();
+	let { icon, size = 16, strokeWidth = 2, class: className, ...rest }: Props = $props();
 
 	let IconComponent = $derived(icon);
 </script>

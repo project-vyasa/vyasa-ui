@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { render } from 'vitest-browser-svelte';
 import SettingsPanel from './SettingsPanel.svelte';
+import type { SettingSection } from './types';
 
 describe('SettingsPanel.svelte', () => {
 	it('should render empty state when schema is empty', async () => {
@@ -13,7 +14,7 @@ describe('SettingsPanel.svelte', () => {
 	});
 
 	it('should render sections based on schema', async () => {
-		const schema = [
+		const schema: SettingSection[] = [
 			{
 				id: 'general',
 				title: 'General Settings',

@@ -229,20 +229,11 @@
 	.flex-1 {
 		flex: 1;
 	}
-	.h-full {
-		height: 100%;
-	}
-	.overflow-hidden {
-		overflow: hidden;
-	}
 	.overflow-auto {
 		overflow: auto;
 	}
 	.p-4 {
 		padding: 1rem;
-	}
-	.border-r {
-		border-right: 1px solid var(--border-base);
 	}
 	/* Removed unused utility classes flagged by svelte-check */
 	.bg-surface-elevated {
@@ -262,8 +253,5 @@
 	}
 	.whitespace-pre-wrap {
 		white-space: pre-wrap;
-	}
-	.flex-\[2\] {
-		flex: 2;
 	}
 </style>

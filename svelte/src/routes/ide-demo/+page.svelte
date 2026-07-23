@@ -4,6 +4,7 @@
 	import AppHeader from '$lib/components/organisms/AppHeader/AppHeader.svelte';
 	import ActivityBar from '$lib/components/organisms/ActivityBar/ActivityBar.svelte';
 	import SettingsModal from '$lib/components/organisms/SettingsModal/SettingsModal.svelte';
+	import type { SettingSection } from '$lib/components/organisms/SettingsPanel/types';
 	import ListView from '$lib/components/organisms/ListView/ListView.svelte';
 	import Tree, { type TreeNode } from '$lib/components/organisms/Tree/Tree.svelte';
 	import Tabs, { type TabItem } from '$lib/components/organisms/Tabs/Tabs.svelte';
@@ -49,6 +50,8 @@
 		current: 'light' | 'dark';
 		theme: 'light' | 'dark' | 'system';
 		density: 'compact' | 'standard' | 'comfortable';
+		toggleTheme: () => void;
+		cycleDensity: () => void;
 	}>('theme');
 
 	let activeActivityId = $state('files');
@@ -61,7 +64,7 @@
 
 	// --- Settings Modal Data ---
 	let isSettingsOpen = $state(false);
-	let settingsSchema = [
+	let settingsSchema: SettingSection[] = [
 		{
 			id: 'general',
 			title: 'General',
@@ -658,13 +661,6 @@ A modern IDE built with Svelte.
 	}
 	.h-full {
 		height: 100%;
-	}
-
-	.divider-v {
-		width: 1px;
-		height: 1.5rem;
-		background-color: var(--border-base);
-		margin: 0 0.5rem;
 	}
 
 	.mt-2 {

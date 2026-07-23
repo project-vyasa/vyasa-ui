@@ -28,6 +28,7 @@ export interface SettingItem {
 }
 
 export interface SettingGroup {
+	id?: string;
 	title?: string;
 	items: SettingItem[];
 	columns?: 1 | 2 | 3 | 4;

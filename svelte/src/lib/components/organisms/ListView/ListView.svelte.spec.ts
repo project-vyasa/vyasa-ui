@@ -101,8 +101,8 @@ describe('ListView.svelte', () => {
 
 		const { getByText } = render(ListView, {
 			items: itemsWithGroups,
-			titleField: 'title',
-			groupBy: 'category'
+			titleField: 'title' as const,
+			groupBy: 'category' as const
 		});
 
 		await expect.element(getByText('Work')).toBeInTheDocument();
@@ -128,8 +128,8 @@ describe('ListView.svelte', () => {
 
 		const { getByText } = render(ListView, {
 			items: itemsWithGroups,
-			titleField: 'title',
-			groupBy: 'category',
+			titleField: 'title' as const,
+			groupBy: 'category' as const,
 			collapsibleGroups: false
 		});
 
@@ -137,4 +137,3 @@ describe('ListView.svelte', () => {
 		await expect.element(getByText('Task B')).toBeInTheDocument();
 	});
 });
-

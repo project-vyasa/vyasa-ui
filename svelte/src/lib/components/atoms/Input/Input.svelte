@@ -2,7 +2,7 @@
 	import type { HTMLInputAttributes } from 'svelte/elements';
 	import type { Snippet } from 'svelte';
 
-	interface Props extends HTMLInputAttributes {
+	interface Props extends Omit<HTMLInputAttributes, 'prefix'> {
 		'aria-invalid'?: boolean | 'grammar' | 'spelling';
 		error?: boolean;
 		fullWidth?: boolean;

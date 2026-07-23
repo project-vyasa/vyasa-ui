@@ -1,10 +1,10 @@
 <script lang="ts">
-	import type { Snippet, Component } from 'svelte';
+	import type { Snippet, Component, ComponentType } from 'svelte';
 	import Button from '$lib/components/atoms/Button/Button.svelte';
 
 	export interface ActivityBarItem {
 		id: string;
-		icon: Component<any>;
+		icon: Component<any> | ComponentType;
 		title?: string;
 	}
 

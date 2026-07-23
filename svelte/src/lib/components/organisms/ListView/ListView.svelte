@@ -1,4 +1,4 @@
-<script lang="ts" generics="T">
+<script lang="ts" generics="T = Record<string, any>">
 	import { type Snippet } from 'svelte';
 	import { SvelteMap, SvelteSet } from 'svelte/reactivity';
 	import { ChevronDown, ChevronRight, Search } from 'lucide-svelte';
@@ -6,7 +6,7 @@
 
 	interface Props<T> {
 		items: T[];
-		keyField?: keyof T;
+		keyField?: keyof T | (string & {});
 
 		selectable?: boolean;
 		selectedIds?: Set<string | number>;
@@ -15,11 +15,11 @@
 		onSelect?: (item: T) => void;
 		onSelectionChange?: (ids: Set<string | number>) => void;
 
-		titleField?: keyof T | ((item: T) => string);
-		subtitleField?: keyof T | ((item: T) => string);
-		descriptionField?: keyof T | ((item: T) => string);
-		metaField?: keyof T | ((item: T) => string);
-		unreadField?: keyof T | ((item: T) => boolean);
+		titleField?: keyof T | (string & {}) | ((item: T) => string);
+		subtitleField?: keyof T | (string & {}) | ((item: T) => string);
+		descriptionField?: keyof T | (string & {}) | ((item: T) => string);
+		metaField?: keyof T | (string & {}) | ((item: T) => string);
+		unreadField?: keyof T | (string & {}) | ((item: T) => boolean);
 
 		avatar?: Snippet<[T]>;
 		title?: Snippet<[T]>;
@@ -27,7 +27,7 @@
 		actions?: Snippet<[T]>;
 		item?: Snippet<[T]>;
 
-		groupBy?: keyof T | ((item: T) => string);
+		groupBy?: keyof T | (string & {}) | ((item: T) => string);
 		groupHeader?: Snippet<[string, boolean, () => void]>;
 		collapsibleGroups?: boolean;
 		showFilterInput?: boolean;
@@ -75,9 +75,15 @@
 		}
 
 		// Find the active group name based on selectedId (or fallback to first item's group)
-		const activeRow = selectedId !== undefined ? items.find((row) => row[keyField] === selectedId) : items[0];
+		const activeRow =
+			selectedId !== undefined
+				? items.find((row) => (row as any)[keyField as string] === selectedId)
+				: items[0];
 		if (!activeRow) return false;
-		const activeGName = typeof groupBy === 'function' ? groupBy(activeRow) : String(activeRow[groupBy] ?? '');
+		const activeGName =
+			typeof groupBy === 'function'
+				? groupBy(activeRow)
+				: String((activeRow as any)[groupBy] ?? '');
 
 		// Collapse any group that is NOT the active group
 		return gName !== activeGName;
@@ -94,31 +100,31 @@
 	// --- Helper Accessors ---
 	function getTitle(row: T): string {
 		if (typeof titleField === 'function') return titleField(row);
-		if (titleField) return String(row[titleField] ?? '');
+		if (titleField) return String((row as any)[titleField] ?? '');
 		return String((row as Record<string, unknown>).title ?? '');
 	}
 
 	function getSubtitle(row: T): string {
 		if (typeof subtitleField === 'function') return subtitleField(row);
-		if (subtitleField) return String(row[subtitleField] ?? '');
+		if (subtitleField) return String((row as any)[subtitleField] ?? '');
 		return String((row as Record<string, unknown>).subtitle ?? '');
 	}
 
 	function getDescription(row: T): string {
 		if (typeof descriptionField === 'function') return descriptionField(row);
-		if (descriptionField) return String(row[descriptionField] ?? '');
+		if (descriptionField) return String((row as any)[descriptionField] ?? '');
 		return String((row as Record<string, unknown>).description ?? '');
 	}
 
 	function getMeta(row: T): string {
 		if (typeof metaField === 'function') return metaField(row);
-		if (metaField) return String(row[metaField] ?? '');
+		if (metaField) return String((row as any)[metaField] ?? '');
 		return String((row as Record<string, unknown>).meta ?? '');
 	}
 
 	function getUnread(row: T): boolean {
 		if (typeof unreadField === 'function') return unreadField(row);
-		if (unreadField) return Boolean(row[unreadField]);
+		if (unreadField) return Boolean((row as any)[unreadField]);
 		return Boolean((row as Record<string, unknown>).unread);
 	}
 
@@ -129,7 +135,7 @@
 		return items.filter((row) => {
 			const t = getTitle(row).toLowerCase();
 			const s = getSubtitle(row).toLowerCase();
-			const id = String(row[keyField] ?? '').toLowerCase();
+			const id = String((row as any)[keyField as string] ?? '').toLowerCase();
 			return t.includes(q) || s.includes(q) || id.includes(q);
 		});
 	});
@@ -151,7 +157,7 @@
 			if (typeof groupBy === 'function') {
 				groupName = groupBy(row);
 			} else {
-				groupName = String(row[groupBy] ?? '');
+				groupName = String((row as any)[groupBy] ?? '');
 			}
 
 			if (!groupsMap.has(groupName)) {
@@ -178,13 +184,13 @@
 
 	// --- Selection Handling ---
 	function handleRowClick(row: T) {
-		const id = row[keyField] as string | number;
+		const id = (row as any)[keyField as string] as string | number;
 		selectedId = id;
 		onSelect?.(row);
 	}
 
 	function handleCheckboxClick(row: T) {
-		const id = row[keyField] as string | number;
+		const id = (row as any)[keyField as string] as string | number;
 		const newSet = new SvelteSet(selectedIds);
 		if (newSet.has(id)) {
 			newSet.delete(id);
@@ -197,7 +203,7 @@
 
 	// --- Keyboard Navigation ---
 	function handleKeyDown(e: KeyboardEvent, row: T) {
-		const id = row[keyField] as string | number;
+		const id = (row as any)[keyField as string] as string | number;
 		if (e.key === 'Enter') {
 			e.preventDefault();
 			handleRowClick(row);
@@ -210,7 +216,7 @@
 			}
 		} else if (e.key === 'ArrowDown' || e.key === 'ArrowUp') {
 			e.preventDefault();
-			const index = filteredItems.findIndex((item) => item[keyField] === id);
+			const index = filteredItems.findIndex((item) => (item as any)[keyField as string] === id);
 			let nextIndex = index;
 			if (e.key === 'ArrowDown') {
 				nextIndex = Math.min(filteredItems.length - 1, index + 1);
@@ -220,7 +226,7 @@
 
 			const nextRow = filteredItems[nextIndex];
 			if (nextRow) {
-				const nextId = nextRow[keyField] as string | number;
+				const nextId = (nextRow as any)[keyField as string] as string | number;
 				selectedId = nextId;
 				onSelect?.(nextRow);
 
@@ -276,8 +282,8 @@
 
 		{#if !isCollapsed}
 			<div class="list-view-group-items">
-				{#each group.items as row (row[keyField])}
-					{@const id = row[keyField] as string | number}
+				{#each group.items as row ((row as any)[keyField as string])}
+					{@const id = (row as any)[keyField as string] as string | number}
 					{@const isSelected = selectedId === id}
 					{@const isChecked = selectedIds.has(id)}
 					{@const isUnread = getUnread(row)}
@@ -568,6 +574,7 @@
 		font-size: var(--text-xs);
 		color: var(--text-tertiary);
 		display: -webkit-box;
+		line-clamp: 2;
 		-webkit-line-clamp: 2;
 		-webkit-box-orient: vertical;
 		overflow: hidden;
