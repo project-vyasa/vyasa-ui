@@ -6,7 +6,7 @@
 	},
 	"repository": {
 		"type": "git",
-		"url": "https://github.com/project-vyasa/vyasa-ui.git"
+		"url": "git+https://github.com/project-vyasa/vyasa-ui.git"
 	},
 	"scripts": {
 		"dev": "vite dev",
