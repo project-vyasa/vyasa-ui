@@ -209,8 +209,10 @@
 
 <style>
 	.app-header {
+		position: relative;
 		display: flex;
 		align-items: center;
+		justify-content: space-between;
 		padding: 0 var(--space-4);
 		height: 100%;
 		gap: var(--space-4);
@@ -225,8 +227,13 @@
 		gap: var(--space-2);
 	}
 	.header-center {
-		flex: 1;
-		justify-content: center;
+		position: absolute;
+		left: 50%;
+		transform: translateX(-50%);
+		pointer-events: none;
+	}
+	.header-center > :global(*) {
+		pointer-events: auto;
 	}
 	.header-right {
 		color: var(--text-primary);

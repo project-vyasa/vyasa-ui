@@ -4,7 +4,9 @@ import { sveltekit } from '@sveltejs/kit/vite';
 
 export default defineConfig({
 	plugins: [sveltekit()],
-
+	server: {
+		port: 7173
+	},
 	test: {
 		expect: { requireAssertions: true },
 		coverage: {

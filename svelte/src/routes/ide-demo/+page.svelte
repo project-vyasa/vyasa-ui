@@ -53,6 +53,12 @@
 
 	let activeActivityId = $state('files');
 
+	// --- Header Project Info ---
+	let lastUpdated = $state(new Date());
+	const formattedTimestamp = $derived(
+		lastUpdated.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' })
+	);
+
 	// --- Settings Modal Data ---
 	let isSettingsOpen = $state(false);
 	let settingsSchema = [
@@ -329,7 +335,13 @@ A modern IDE built with Svelte.
 {/snippet}
 
 {#snippet headerContent()}
-	<AppHeader bind:leftVisible bind:bottomVisible bind:rightVisible />
+	<AppHeader bind:leftVisible bind:bottomVisible bind:rightVisible>
+		<div class="header-center-info">
+			<span class="project-tag">project-vyasa</span>
+			<span class="dot-separator">•</span>
+			<span class="timestamp-tag">{formattedTimestamp}</span>
+		</div>
+	</AppHeader>
 {/snippet}
 
 {#snippet appBarContent()}
@@ -675,5 +687,32 @@ A modern IDE built with Svelte.
 	}
 	.ml-auto {
 		margin-left: auto;
+	}
+
+	.header-center-info {
+		display: flex;
+		align-items: center;
+		gap: var(--space-2, 0.5rem);
+		font-size: var(--text-xs, 0.75rem);
+		color: var(--text-secondary);
+		background-color: var(--bg-surface, rgba(0, 0, 0, 0.15));
+		padding: 0.2rem 0.6rem;
+		border-radius: var(--control-radius, 4px);
+		border: 1px solid var(--border-base);
+	}
+
+	.project-tag {
+		font-weight: 600;
+		color: var(--text-primary);
+	}
+
+	.dot-separator {
+		opacity: 0.4;
+	}
+
+	.timestamp-tag {
+		font-family: var(--font-mono, monospace);
+		font-size: 0.7rem;
+		color: var(--text-tertiary);
 	}
 </style>
