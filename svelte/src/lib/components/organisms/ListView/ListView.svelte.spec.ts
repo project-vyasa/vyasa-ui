@@ -92,7 +92,7 @@ describe('ListView.svelte', () => {
 		expect(calledSet.has('1')).toBe(true);
 	});
 
-	it('should group items when groupBy is provided', async () => {
+	it('should group items when groupBy is provided and allow expanding collapsed groups', async () => {
 		const itemsWithGroups = [
 			{ id: '1', title: 'Task A', category: 'Work' },
 			{ id: '2', title: 'Task B', category: 'Personal' },
@@ -108,7 +108,33 @@ describe('ListView.svelte', () => {
 		await expect.element(getByText('Work')).toBeInTheDocument();
 		await expect.element(getByText('Personal')).toBeInTheDocument();
 		await expect.element(getByText('Task A')).toBeInTheDocument();
-		await expect.element(getByText('Task B')).toBeInTheDocument();
 		await expect.element(getByText('Task C')).toBeInTheDocument();
+
+		// Group 'Personal' is collapsed initially (non-active). Clicking header expands it.
+		const personalHeader = getByText('Personal');
+		await personalHeader.click();
+		await expect.element(getByText('Task B')).toBeInTheDocument();
+
+		// Clicking header again collapses it.
+		await personalHeader.click();
+		await expect.element(getByText('Task B')).not.toBeInTheDocument();
+	});
+
+	it('should keep all groups expanded when collapsibleGroups is false', async () => {
+		const itemsWithGroups = [
+			{ id: '1', title: 'Task A', category: 'Work' },
+			{ id: '2', title: 'Task B', category: 'Personal' }
+		];
+
+		const { getByText } = render(ListView, {
+			items: itemsWithGroups,
+			titleField: 'title',
+			groupBy: 'category',
+			collapsibleGroups: false
+		});
+
+		await expect.element(getByText('Task A')).toBeInTheDocument();
+		await expect.element(getByText('Task B')).toBeInTheDocument();
 	});
 });
+

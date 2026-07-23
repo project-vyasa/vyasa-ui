@@ -76,7 +76,7 @@
 		border-radius: var(--control-radius);
 		border: 1px solid var(--border-base);
 		background-color: var(--bg-surface);
-		padding: 0 0.75rem; /* Padding horizontal on wrapper */
+		padding: 0 calc(0.75rem * var(--density, 1)); /* Scaling padding with density */
 		box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
 		transition:
 			border-color 0.2s,

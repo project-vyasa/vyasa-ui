@@ -54,7 +54,7 @@
 			density = v;
 		},
 		toggleTheme: () => {
-			theme = theme === 'light' ? 'dark' : 'light';
+			theme = effectiveTheme === 'dark' ? 'light' : 'dark';
 		},
 		cycleDensity: () => {
 			const map: Record<Density, Density> = {

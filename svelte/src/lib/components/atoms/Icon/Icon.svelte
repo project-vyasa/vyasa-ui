@@ -10,14 +10,18 @@
 	}
 
 	let {
-		icon: IconComponent,
+		icon,
 		size = 16,
 		strokeWidth = 2,
 		class: className,
 		...rest
 	}: Props = $props();
+
+	let IconComponent = $derived(icon);
 </script>
 
-{#if IconComponent}
-	<IconComponent {size} {strokeWidth} class={className} {...rest} />
-{/if}
+{#key IconComponent}
+	{#if IconComponent}
+		<IconComponent {size} {strokeWidth} class={className} {...rest} />
+	{/if}
+{/key}

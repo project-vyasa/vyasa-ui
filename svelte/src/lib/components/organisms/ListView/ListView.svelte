@@ -1,6 +1,8 @@
 <script lang="ts" generics="T">
 	import { type Snippet } from 'svelte';
 	import { SvelteMap, SvelteSet } from 'svelte/reactivity';
+	import { ChevronDown, ChevronRight, Search } from 'lucide-svelte';
+	import Icon from '../../atoms/Icon/Icon.svelte';
 
 	interface Props<T> {
 		items: T[];
@@ -26,7 +28,9 @@
 		item?: Snippet<[T]>;
 
 		groupBy?: keyof T | ((item: T) => string);
-		groupHeader?: Snippet<[string]>;
+		groupHeader?: Snippet<[string, boolean, () => void]>;
+		collapsibleGroups?: boolean;
+		showFilterInput?: boolean;
 
 		class?: string;
 	}
@@ -54,10 +58,38 @@
 
 		groupBy,
 		groupHeader,
+		collapsibleGroups = true,
+		showFilterInput = true,
 		class: className = ''
 	}: Props<T> = $props();
 
 	let container = $state<HTMLElement>();
+	let filterQuery = $state('');
+	let collapsedMap = $state<Record<string, boolean>>({});
+
+	// Helper to check if a group is collapsed (defaults to collapsed if not active group)
+	function isGroupCollapsed(gName: string): boolean {
+		if (!collapsibleGroups || !groupBy) return false;
+		if (collapsedMap[gName] !== undefined) {
+			return collapsedMap[gName];
+		}
+
+		// Find the active group name based on selectedId (or fallback to first item's group)
+		const activeRow = selectedId !== undefined ? items.find((row) => row[keyField] === selectedId) : items[0];
+		if (!activeRow) return false;
+		const activeGName = typeof groupBy === 'function' ? groupBy(activeRow) : String(activeRow[groupBy] ?? '');
+
+		// Collapse any group that is NOT the active group
+		return gName !== activeGName;
+	}
+
+	function toggleGroup(gName: string) {
+		const current = isGroupCollapsed(gName);
+		collapsedMap = {
+			...collapsedMap,
+			[gName]: !current
+		};
+	}
 
 	// --- Helper Accessors ---
 	function getTitle(row: T): string {
@@ -90,6 +122,18 @@
 		return Boolean((row as Record<string, unknown>).unread);
 	}
 
+	// --- Filter Logic ---
+	const filteredItems = $derived.by(() => {
+		if (!filterQuery.trim()) return items;
+		const q = filterQuery.toLowerCase().trim();
+		return items.filter((row) => {
+			const t = getTitle(row).toLowerCase();
+			const s = getSubtitle(row).toLowerCase();
+			const id = String(row[keyField] ?? '').toLowerCase();
+			return t.includes(q) || s.includes(q) || id.includes(q);
+		});
+	});
+
 	// --- Grouping Logic ---
 	interface GroupedItems {
 		name: string;
@@ -98,11 +142,11 @@
 
 	const groupedItems = $derived.by<GroupedItems[]>(() => {
 		if (!groupBy) {
-			return [{ name: '', items }];
+			return [{ name: '', items: filteredItems }];
 		}
 
 		const groupsMap = new SvelteMap<string, T[]>();
-		for (const row of items) {
+		for (const row of filteredItems) {
 			let groupName = '';
 			if (typeof groupBy === 'function') {
 				groupName = groupBy(row);
@@ -116,10 +160,20 @@
 			groupsMap.get(groupName)!.push(row);
 		}
 
-		return Array.from(groupsMap.entries()).map(([name, items]) => ({
+		return Array.from(groupsMap.entries()).map(([name, groupRows]) => ({
 			name,
-			items
+			items: groupRows
 		}));
+	});
+
+	// --- Auto scroll active selection into view ---
+	$effect(() => {
+		if (selectedId !== undefined && container) {
+			setTimeout(() => {
+				const selectedNode = container?.querySelector('.list-view-item.selected') as HTMLElement;
+				selectedNode?.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+			}, 50);
+		}
 	});
 
 	// --- Selection Handling ---
@@ -156,24 +210,25 @@
 			}
 		} else if (e.key === 'ArrowDown' || e.key === 'ArrowUp') {
 			e.preventDefault();
-			const index = items.findIndex((item) => item[keyField] === id);
+			const index = filteredItems.findIndex((item) => item[keyField] === id);
 			let nextIndex = index;
 			if (e.key === 'ArrowDown') {
-				nextIndex = Math.min(items.length - 1, index + 1);
+				nextIndex = Math.min(filteredItems.length - 1, index + 1);
 			} else {
 				nextIndex = Math.max(0, index - 1);
 			}
 
-			const nextRow = items[nextIndex];
-			const nextId = nextRow[keyField] as string | number;
+			const nextRow = filteredItems[nextIndex];
+			if (nextRow) {
+				const nextId = nextRow[keyField] as string | number;
+				selectedId = nextId;
+				onSelect?.(nextRow);
 
-			selectedId = nextId;
-			onSelect?.(nextRow);
-
-			if (container) {
-				const nodes = container.querySelectorAll('.list-view-item');
-				const targetNode = nodes[nextIndex] as HTMLElement;
-				targetNode?.focus();
+				if (container) {
+					const nodes = container.querySelectorAll('.list-view-item');
+					const targetNode = nodes[nextIndex] as HTMLElement;
+					targetNode?.focus();
+				}
 			}
 		}
 	}
@@ -185,110 +240,134 @@
 	role="listbox"
 	aria-multiselectable={selectable}
 >
+	{#if showFilterInput && items.length > 10}
+		<div class="list-view-filter-bar">
+			<Icon icon={Search} size={14} class="filter-icon" />
+			<input
+				type="text"
+				bind:value={filterQuery}
+				placeholder="Filter navigation..."
+				class="filter-input"
+			/>
+		</div>
+	{/if}
+
 	{#each groupedItems as group (group.name)}
+		{@const isCollapsed = isGroupCollapsed(group.name)}
 		{#if group.name}
 			{#if groupHeader}
-				{@render groupHeader(group.name)}
+				{@render groupHeader(group.name, isCollapsed, () => toggleGroup(group.name))}
 			{:else}
-				<div class="list-view-group-header">
-					{group.name}
+				<!-- svelte-ignore a11y_click_events_have_key_events -->
+				<!-- svelte-ignore a11y_no_static_element_interactions -->
+				<div
+					class="list-view-group-header"
+					class:collapsible={collapsibleGroups}
+					onclick={() => collapsibleGroups && toggleGroup(group.name)}
+				>
+					{#if collapsibleGroups}
+						<Icon icon={isCollapsed ? ChevronRight : ChevronDown} size={16} class="group-chevron" />
+					{/if}
+					<span class="group-title-text">{group.name}</span>
+					<span class="group-count">({group.items.length})</span>
 				</div>
 			{/if}
 		{/if}
 
-		<div class="list-view-group-items">
-			{#each group.items as row (row[keyField])}
-				{@const id = row[keyField] as string | number}
-				{@const isSelected = selectedId === id}
-				{@const isChecked = selectedIds.has(id)}
-				{@const isUnread = getUnread(row)}
+		{#if !isCollapsed}
+			<div class="list-view-group-items">
+				{#each group.items as row (row[keyField])}
+					{@const id = row[keyField] as string | number}
+					{@const isSelected = selectedId === id}
+					{@const isChecked = selectedIds.has(id)}
+					{@const isUnread = getUnread(row)}
 
-				<div
-					class="list-view-item"
-					class:selected={isSelected}
-					class:checked={isChecked}
-					class:unread={isUnread}
-					onclick={() => handleRowClick(row)}
-					onkeydown={(e) => handleKeyDown(e, row)}
-					role="option"
-					aria-selected={isSelected}
-					tabindex="0"
-				>
-					{#if itemSnippet}
-						{@render itemSnippet(row)}
-					{:else}
-						<!-- Avatar / Selection Area -->
-						{#if selectable || avatar}
-							<!-- stopPropagation to avoid triggering row select when clicking checkbox/avatar -->
-							<div
-								class="item-avatar-area"
-								onclick={(e) => {
-									e.stopPropagation();
-									handleCheckboxClick(row);
-								}}
-								role="presentation"
-							>
-								{#if avatar}
-									{@render avatar(row)}
-								{:else if selectable}
-									<input
-										type="checkbox"
-										checked={isChecked}
-										class="item-checkbox"
-										tabindex="-1"
-										onclick={(e) => e.stopPropagation()}
-										onchange={() => handleCheckboxClick(row)}
-									/>
+					<div
+						class="list-view-item"
+						class:selected={isSelected}
+						class:checked={isChecked}
+						class:unread={isUnread}
+						onclick={() => handleRowClick(row)}
+						onkeydown={(e) => handleKeyDown(e, row)}
+						role="option"
+						aria-selected={isSelected}
+						tabindex="0"
+					>
+						{#if itemSnippet}
+							{@render itemSnippet(row)}
+						{:else}
+							<!-- Avatar / Selection Area -->
+							{#if selectable || avatar}
+								<div
+									class="item-avatar-area"
+									onclick={(e) => {
+										e.stopPropagation();
+										handleCheckboxClick(row);
+									}}
+									role="presentation"
+								>
+									{#if avatar}
+										{@render avatar(row)}
+									{:else if selectable}
+										<input
+											type="checkbox"
+											checked={isChecked}
+											class="item-checkbox"
+											tabindex="-1"
+											onclick={(e) => e.stopPropagation()}
+											onchange={() => handleCheckboxClick(row)}
+										/>
+									{/if}
+								</div>
+							{/if}
+
+							<!-- Content Block -->
+							<div class="item-content">
+								<div class="item-header-row">
+									<div class="item-title">
+										{#if title}
+											{@render title(row)}
+										{:else}
+											{getTitle(row)}
+										{/if}
+										{#if isUnread}
+											<span class="unread-dot" title="Unread"></span>
+										{/if}
+									</div>
+
+									<div class="item-meta">
+										{#if meta}
+											{@render meta(row)}
+										{:else}
+											{getMeta(row)}
+										{/if}
+									</div>
+								</div>
+
+								{#if subtitleField || getSubtitle(row)}
+									<div class="item-subtitle">
+										{getSubtitle(row)}
+									</div>
+								{/if}
+
+								{#if descriptionField || getDescription(row)}
+									<div class="item-description">
+										{getDescription(row)}
+									</div>
 								{/if}
 							</div>
-						{/if}
 
-						<!-- Content Block -->
-						<div class="item-content">
-							<div class="item-header-row">
-								<div class="item-title">
-									{#if title}
-										{@render title(row)}
-									{:else}
-										{getTitle(row)}
-									{/if}
-									{#if isUnread}
-										<span class="unread-dot" title="Unread"></span>
-									{/if}
-								</div>
-
-								<div class="item-meta">
-									{#if meta}
-										{@render meta(row)}
-									{:else}
-										{getMeta(row)}
-									{/if}
-								</div>
-							</div>
-
-							{#if subtitleField || getSubtitle(row)}
-								<div class="item-subtitle">
-									{getSubtitle(row)}
+							<!-- Hover Actions -->
+							{#if actions}
+								<div class="item-actions" onclick={(e) => e.stopPropagation()} role="presentation">
+									{@render actions(row)}
 								</div>
 							{/if}
-
-							{#if descriptionField || getDescription(row)}
-								<div class="item-description">
-									{getDescription(row)}
-								</div>
-							{/if}
-						</div>
-
-						<!-- Hover Actions -->
-						{#if actions}
-							<div class="item-actions" onclick={(e) => e.stopPropagation()} role="presentation">
-								{@render actions(row)}
-							</div>
 						{/if}
-					{/if}
-				</div>
-			{/each}
-		</div>
+					</div>
+				{/each}
+			</div>
+		{/if}
 	{/each}
 </div>
 
@@ -306,18 +385,73 @@
 		border-radius: var(--control-radius, 6px);
 	}
 
-	.list-view-group-header {
-		padding: calc(0.35rem * var(--density, 1)) var(--space-3);
-		font-size: var(--text-xs);
-		font-weight: 600;
-		color: var(--text-secondary);
+	.list-view-filter-bar {
+		display: flex;
+		align-items: center;
+		padding: var(--space-2) var(--space-3);
+		border-bottom: 1px solid var(--border-base);
 		background-color: var(--bg-surface-alt);
+		gap: var(--space-2);
+		position: sticky;
+		top: 0;
+		z-index: 10;
+	}
+
+	.filter-input {
+		width: 100%;
+		border: 1px solid var(--border-base);
+		background: var(--bg-surface);
+		color: var(--text-primary);
+		border-radius: var(--control-radius, 4px);
+		padding: var(--space-1) var(--space-2);
+		font-size: var(--text-xs);
+		outline: none;
+	}
+
+	.filter-input:focus {
+		border-color: var(--action-primary);
+	}
+
+	.list-view-group-header {
+		padding: var(--space-3) var(--space-4);
+		min-height: 2.75rem;
+		font-size: var(--text-xs);
+		font-weight: 700;
+		color: var(--text-primary);
+		background-color: var(--bg-surface-elevated);
 		text-transform: uppercase;
 		letter-spacing: 0.05em;
 		border-bottom: 1px solid var(--border-base);
 		position: sticky;
 		top: 0;
 		z-index: 5;
+		display: flex;
+		align-items: center;
+		gap: var(--space-3);
+		user-select: none;
+	}
+
+	.list-view-group-header.collapsible {
+		cursor: pointer;
+	}
+
+	.list-view-group-header.collapsible:hover {
+		background-color: var(--bg-surface-alt);
+		color: var(--action-primary);
+	}
+
+	.group-title-text {
+		flex: 1;
+		overflow: hidden;
+		text-overflow: ellipsis;
+		white-space: nowrap;
+	}
+
+	.group-count {
+		opacity: 0.7;
+		font-size: 0.85em;
+		font-weight: 600;
+		flex-shrink: 0;
 	}
 
 	.list-view-group-items {
@@ -375,7 +509,7 @@
 		display: flex;
 		flex-direction: column;
 		flex: 1;
-		min-width: 0; /* Prevents text overflow breaking layout */
+		min-width: 0;
 		gap: var(--space-1);
 	}
 

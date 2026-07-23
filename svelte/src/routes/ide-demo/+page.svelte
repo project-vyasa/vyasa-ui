@@ -355,7 +355,7 @@ A modern IDE built with Svelte.
 				<Button
 					variant="ghost"
 					size="icon"
-					icon={themeContext.current === 'dark' ? Moon : Sun}
+					icon={themeContext.current === 'dark' ? Sun : Moon}
 					onclick={() => themeContext.toggleTheme()}
 					title="Toggle Theme"
 				/>

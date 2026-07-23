@@ -441,13 +441,14 @@
 				class="col"
 				style="flex: 1; min-width: 300px; display: flex; flex-direction: column; gap: 1rem;"
 			>
-				<h3 class="font-bold mb-2">Multi-Select Mode (With Grouping)</h3>
+				<h3 class="font-bold mb-2">Multi-Select Mode (Collapsible Groups)</h3>
 				<div style="height: 350px;">
 					<ListView
 						items={listViewData}
 						selectable
 						bind:selectedIds={selectedListViewIds}
 						groupBy="category"
+						collapsibleGroups={true}
 						titleField="title"
 						subtitleField="subtitle"
 						descriptionField="description"
@@ -457,6 +458,42 @@
 				</div>
 				<div class="text-sm text-secondary">
 					Selected IDs: {Array.from(selectedListViewIds).join(', ') || 'None'}
+				</div>
+			</div>
+
+			<div
+				class="col"
+				style="flex: 1; min-width: 300px; display: flex; flex-direction: column; gap: 1rem;"
+			>
+				<h3 class="font-bold mb-2">Custom Group Header (Collapsible)</h3>
+				<div style="height: 350px;">
+					<ListView
+						items={listViewData}
+						groupBy="category"
+						collapsibleGroups={true}
+						titleField="title"
+						subtitleField="subtitle"
+						descriptionField="description"
+						metaField="meta"
+					>
+						{#snippet groupHeader(groupName, isCollapsed, toggle)}
+							<div
+								onclick={toggle}
+								onkeydown={(e) => (e.key === 'Enter' || e.key === ' ') && toggle()}
+								role="button"
+								tabindex="0"
+								style="display: flex; align-items: center; justify-content: space-between; padding: 0.5rem 1rem; background: var(--bg-surface-elevated); border-bottom: 1px solid var(--border-base); cursor: pointer; user-select: none;"
+							>
+								<span style="font-weight: 600; color: var(--text-primary);">📂 {groupName}</span>
+								<span style="font-size: 0.75rem; color: var(--text-tertiary);">
+									{isCollapsed ? '▶ Show items' : '▼ Hide items'}
+								</span>
+							</div>
+						{/snippet}
+					</ListView>
+				</div>
+				<div class="text-sm text-secondary">
+					Custom `groupHeader` snippet receiving group name, collapse state, and toggle function.
 				</div>
 			</div>
 		</div>
