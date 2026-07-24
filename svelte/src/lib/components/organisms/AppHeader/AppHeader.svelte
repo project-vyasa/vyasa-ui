@@ -8,6 +8,8 @@
 		leftVisible?: boolean;
 		bottomVisible?: boolean;
 		rightVisible?: boolean;
+		themeContext?: any; // Fallback for cross-package context loss
+		headerRight?: import('svelte').Snippet; // Extensibility for consumers
 		children?: import('svelte').Snippet;
 	}
 
@@ -17,10 +19,14 @@
 		leftVisible = $bindable(true),
 		bottomVisible = $bindable(true),
 		rightVisible = $bindable(false),
+		themeContext,
+		headerRight,
 		children
 	}: Props = $props();
 
-	const themeCtx = getContext<any>('theme');
+	// Fallback to getContext if prop is not provided (for ide-demo)
+	const defaultThemeCtx = getContext<any>('theme');
+	const themeCtx = $derived(themeContext || defaultThemeCtx);
 	const appShellCtx = getContext<{ hasLeft: boolean; hasRight: boolean; hasBottom: boolean }>(
 		'appShell'
 	);
@@ -40,6 +46,7 @@
 	</div>
 
 	<div class="header-right">
+		{@render headerRight?.()}
 		<!-- Panel Toggles -->
 		{#if showLeftToggle}
 			<Button
