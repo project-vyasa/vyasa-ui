@@ -1,0 +1,104 @@
+<script lang="ts">
+	import Icon from '../../atoms/Icon/Icon.svelte';
+	import { toast, type Toast } from '../../../stores/toast.svelte.js';
+	import { Info, CheckCircle, AlertTriangle, AlertOctagon, X } from 'lucide-svelte';
+
+	interface Props {
+		item: Toast;
+	}
+
+	let { item }: Props = $props();
+
+	const icons = {
+		info: Info,
+		success: CheckCircle,
+		warning: AlertTriangle,
+		danger: AlertOctagon
+	};
+
+	let iconComponent = $derived(icons[item.variant || 'info'] || Info);
+</script>
+
+<div class="toast {item.variant || 'info'}" role="alert">
+	<div class="toast-icon">
+		<Icon icon={iconComponent} size={20} />
+	</div>
+	<div class="toast-message">{item.message}</div>
+	{#if item.dismissible}
+		<button class="close-btn" onclick={() => toast.dismiss(item.id)} aria-label="Dismiss">
+			<Icon icon={X} size={16} />
+		</button>
+	{/if}
+</div>
+
+<style>
+	.toast {
+		display: flex;
+		align-items: center;
+		padding: 0.75rem 1rem;
+		background-color: var(--bg-surface-elevated);
+		border: 1px solid var(--border-base);
+		border-radius: var(--control-radius);
+		box-shadow:
+			0 4px 6px -1px rgba(0, 0, 0, 0.1),
+			0 2px 4px -1px rgba(0, 0, 0, 0.06);
+		gap: 0.75rem;
+		min-width: 20rem;
+		max-width: 24rem;
+		pointer-events: auto;
+		animation: toast-slide-in 0.3s ease-out;
+	}
+
+	@keyframes toast-slide-in {
+		from {
+			opacity: 0;
+			transform: translateY(20px);
+		}
+		to {
+			opacity: 1;
+			transform: translateY(0);
+		}
+	}
+
+	.toast-message {
+		flex: 1;
+		font-size: var(--text-sm);
+		color: var(--text-primary);
+		line-height: 1.4;
+	}
+
+	.toast-icon {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+	}
+
+	.close-btn {
+		background: none;
+		border: none;
+		padding: 0;
+		cursor: pointer;
+		opacity: 0.5;
+		transition: opacity 0.2s;
+		color: var(--text-secondary);
+		display: flex;
+	}
+	.close-btn:hover {
+		opacity: 1;
+		color: var(--text-primary);
+	}
+
+	/* Variant Colors for Icon */
+	.info .toast-icon {
+		color: var(--color-blue-500);
+	}
+	.success .toast-icon {
+		color: var(--color-green-500);
+	}
+	.warning .toast-icon {
+		color: var(--color-yellow-500);
+	}
+	.danger .toast-icon {
+		color: var(--color-red-500);
+	}
+</style>
